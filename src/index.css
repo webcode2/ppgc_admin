@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-white text-black dark:bg-gray-900 dark:text-white;
+  }
+}
+/* Hide scrollbar but keep scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
