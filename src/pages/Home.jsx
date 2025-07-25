@@ -14,8 +14,8 @@ export default function IoTNoticeBoardLanding() {
             home
             {/* Footer */}
             <footer className="bg-gray-900 text-white px-6 md:px-10 py-8 text-center">
-                Presented by Tope
-                <p className="text-xs" >&copy; 2025 IoT Notice Board Project. All rights reserved.</p>
+
+                <p className="text-xs" >&copy; 2025 All rights reserved.</p>
             </footer>
         </div>
     );

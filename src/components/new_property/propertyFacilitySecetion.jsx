@@ -27,7 +27,7 @@ export default function FacilitiesSelect({ selected, onChange }) {
     };
 
     return (
-        <div className="bg-white rounded-lg p-6 shadow-sm">
+        <div className="bg-white rounded-lg p-6 border border-gray-200">
             <h3 className="text-lg font-semibold mb-4">Main Facilities</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {facilities.map((facility) => (

@@ -18,7 +18,7 @@ function PropertyScreen() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className=" md:row-span-2 h-full">
                     <DashboardCard title="Add New Property">
-                        <div className="space-y-6 mt-10">
+                        <div className="space-y-6 mt-10 bord">
 
                             {/* Grid for top fields */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -123,7 +123,6 @@ function PropertyScreen() {
                 
             </div>
             <div className="w-full">
-                .btn
             </div>
 
         </div >
