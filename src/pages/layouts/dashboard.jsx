@@ -8,11 +8,16 @@ export default function Dashboard() {
 
     return (
         <div className="bg-white text-gray-900 font-sans">
-            {/* Mobile Responsive Header */}
-            <Header setMenuOpen={setMenuOpen} menuOpen={menuOpen} />
+            <div className="md:block hidden">
+                <Header setMenuOpen={setMenuOpen} menuOpen={menuOpen} />
 
             <UserDashboard />
             {/* Footer */}
+            </div>
+            <div className="md:hidden justify-center flex items-center h-screen">
+                <p className="text-center font-bold  text-lg  "> Switch to desktop to view</p>
+            </div>
+            {/* Mobile Responsive Header */}
 
         </div>
     );
