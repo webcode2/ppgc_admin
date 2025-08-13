@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkIfAuthenticated, registerAccount } from "../../store/slice/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { KeyRoundIcon, KeySquareIcon, Mail, MailIcon, User, UserCircle } from "lucide-react";
+import RightBG from "../../components/auth/RightBG";
 
 export default function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
-    const [form, setForm] = useState({ email: '', password: '', username: "" });
+    const [form, setForm] = useState({ email: '', password: '', name: "" });
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -40,60 +42,84 @@ export default function Register() {
         e.preventDefault();
         if (!validate()) return;
 
-        dispatch(registerAccount({ email: form.email, username: form.username, password: form.password }));
+        dispatch(registerAccount({ email: form.email, name: form.name, password: form.password }));
         // Optionally navigate after login
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-sm">
-                <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-                <div className="mb-4">
-                    <label htmlFor="username" className="block mb-1 text-sm font-medium text-gray-700">Username</label>
-                    <input
-                        id="username"
-                        type="text"
-                        name="username"
-                        value={form.username}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    {errors.username && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
+        <div className="min-h-screen flex ">
+            <div className="w-6/12 bg-white z-40 flex items-center justify-center p-8">
+                <form onSubmit={handleSubmit} className=" w-full max-w-sm">
+                    <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+                    <div className="mb-4">
+                        <label htmlFor="name" className="block mb-1 text-sm font-medium text-gray-700">Name</label>
+                        <div className="relative">
 
-                </div>
-                <div className="mb-4">
-                    <label className="block mb-1 text-sm font-medium text-gray-700">Email</label>
+                            <input
+                                id="name"
+                                placeholder="Enter your full name"
+                                type="text"
+                                name="name"
+                                value={form.name}
+                                onChange={handleChange}
+                                className="w-full pl-4 pr-10 py-3  rounded-full focus:outline-none  focus:ring-2 focus:ring-gray-300  bg-gray-100"
+                            />
+                            <UserCircle className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                        </div>
+
+
+                        {errors.name && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
+
+                    </div>
+                    <div className="mb-4">
+                        <label className="block mb-1 text-sm font-medium text-gray-700">Email</label>
+                        <div className="relative">
 
                     <input
                         type="email"
                         name="email"
                         value={form.email}
+                                placeholder="Enter your Email"
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full pl-4 pr-10 py-3  rounded-full focus:outline-none  focus:ring-2 focus:ring-gray-300  bg-gray-100"
                     />
-                    {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
-                </div>
 
-                <div className="mb-6">
-                    <label className="block mb-1 text-sm font-medium text-gray-700">Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={form.password}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
-                </div>
+                            <MailIcon className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                        </div>
 
-                <button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition"
-                >
-                    Sign Up
-                </button>
-                <p className="text-xs mt-5">  already have an Account with us? <Link to={"/auth/login"}>login</Link></p>
-            </form>
+                        {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
+                    </div>
+
+                    <div className="mb-6">
+                        <label className="block mb-1 text-sm font-medium text-gray-700">Password</label>
+                        <div className="relative">
+
+                            <input
+                                type="password"
+                                name="password"
+                                value={form.password}
+                                placeholder="Enter Password"
+                                onChange={handleChange}
+                                className="w-full pl-4 pr-10 py-3  rounded-full focus:outline-none  focus:ring-2 focus:ring-gray-300  bg-gray-100"
+
+                            />
+                            <KeySquareIcon className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                        </div>
+
+                        {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white cursor-pointer font-semibold py-2 px-4 rounded-full bg-[linear-gradient(0deg,#938E07,#F9F10C)] active:scale-95 transition-transform duration-200 focus:ring-opacity-50"
+                    >
+                        Sign Up
+                    </button>
+                    <p className="text-xs mt-5 text-center">  already have an Account with us? <Link to={"/auth/login"} className="text-[#938E07]">login</Link></p>
+                </form>
+            </div >
+
+            <RightBG title={"Create an account!"} />
         </div>
     );
 }

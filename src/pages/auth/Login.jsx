@@ -1,7 +1,9 @@
+import { KeyRoundIcon, Mail } from "lucide-react";
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkIfAuthenticated, loginAccount } from "../../store/slice/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import RightBG from "../../components/auth/RightBG";
 
 export default function Login() {
     const dispatch = useDispatch();
@@ -46,45 +48,68 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-sm">
-                <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+        <div className="min-h-screen  flex   ">
 
-                <div className="mb-4">
-                    <label className="block mb-1 text-sm font-medium text-gray-700">Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
-                </div>
+            <div className="w-6/12 bg-white z-40 flex items-center justify-center p-8">
 
-                <div className="mb-6">
-                    <label className="block mb-1 text-sm font-medium text-gray-700">Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={form.password}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
-                </div>
+                <form onSubmit={handleSubmit} className="bg-white w-full max-w-sm">
+                    <h2 className="text-2xl font-bold mb-6 font-serif text-center">Sign In</h2>
 
-                <button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition"
-                >
-                    Sign In
-                </button>
-                <p className="text-xs mt-4 "> <Link className="text-blue-400" to={"/auth/forget-password"}>Forgot password?</Link> </p>
 
-                <p className="text-xs mt-4 "> Don't have an Account? <Link className="text-blue-400" to={"/auth/register"}>Sign up</Link> no for one!</p>
+                    <div className="mb-4">
+                        <label className="block mb-1 text-sm font-medium text-gray-700">Email</label>
 
-            </form>
-        </div>
+                        <div className="relative">
+                            <input
+                                type="email"
+                                name="email"
+                                value={form.email}
+                                onChange={handleChange}
+                                className="w-full pl-4 pr-10 py-3  rounded-full focus:outline-none  focus:ring-2 focus:ring-gray-300  bg-gray-100"
+                            />
+                            <Mail className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                        </div>
+
+                        {errors.email && (
+                            <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+                        )}
+                    </div>
+                    <div className="mb-4">
+                        <label className="block mb-1 text-sm font-medium text-gray-700">Password</label>
+
+                        <div className="relative">
+                            <input
+                                type="password"
+                                name="password"
+                                value={form.password}
+                                onChange={handleChange}
+                                className="w-full pl-4 pr-10 py-3  rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300  bg-gray-100"
+                            />
+
+                            <KeyRoundIcon className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                        </div>
+
+                        {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
+                    </div>
+
+
+                    <div className="mb-6 justify-end flex">
+
+                        <p className="text-xs mt-4 "> <Link className="text-[#938E07] text-end " to={"/auth/forget-password"}>Forgot password?</Link> </p>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white cursor-pointer font-semibold py-2 px-4 rounded-full bg-[linear-gradient(0deg,#938E07,#F9F10C)] active:scale-95 transition-transform duration-200 focus:ring-opacity-50">
+                        Sign In
+                    </button>
+
+                    <p className="text-xs text-center mt-6 ">  have an Account? <Link className="text-[#938E07]" to={"/auth/register"}>Sign up</Link> no for one!</p>
+
+                </form>
+            </div>
+
+            <RightBG title={"Welcome back!"} />
+        </div >
     );
 }

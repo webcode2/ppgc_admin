@@ -24,9 +24,8 @@ let router = createBrowserRouter([
     children: [
 
       // Main App
-      { index: true, Component: Home },
       {
-        path: "dashboard/", Component: Dashboard,
+        path: "/", Component: Dashboard,
         children: [
           { index: true, Component: DashBoardIndex },
           { path: "bookings", Component: Booking },

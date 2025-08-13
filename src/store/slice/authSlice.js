@@ -8,6 +8,7 @@ const SERVER_URL = `http://localhost:4000/`
 export const loginAccount = createAsyncThunk(
     'auth/loginAccount',
     async (data, { rejectWithValue }) => {
+        console.log(data)
         try {
             const user = await axios.post(`${SERVER_URL}api/auth/login`, data, {
                 headers: { "Content-Type": "application/json" }
@@ -22,6 +23,7 @@ export const registerAccount = createAsyncThunk(
     'auth/registerAccount',
     async (data, { rejectWithValue }) => {
 
+        console.log(data)
         try {
             const user = await axios.post(`${SERVER_URL}api/auth/register/`, { ...data, name: data.username }, {
                 headers: { "Content-Type": "application/json" }
@@ -61,7 +63,7 @@ const saveToLocalStorage = ({ name, _ }) => {
 
 const initialState = {
     isAuthenticated: false,
-    user: { device: null, details: null },
+    user: { bio: null, roles: [], },
     isLoading: false,
     error: null,
 
@@ -87,17 +89,11 @@ const authSlice = createSlice({
 
                 state.isAuthenticated = true
                 state.isLoading = false;
-                state.user.details = {
-                    email: action.payload.email,
-                    registeredAt: action.payload.createdAt,
-                    name: action.payload.name,
-                    id: action.payload.id,
-                    token: action.payload.jwt_token
-
-                }
+                state.user.details = action.payload.user
+                state.user.roles = action.payload.roles
                 saveToLocalStorage({ _: state.user.details, name: "userDetails" })
-
             })
+
             .addCase(loginAccount.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;
