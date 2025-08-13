@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkIfAuthenticated, registerAccount } from "../../store/slice/authSlice";
+import { checkIfAuthenticated, preRegisterAccount, registerAccount } from "../../store/slice/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { KeyRoundIcon, KeySquareIcon, Mail, MailIcon, User, UserCircle } from "lucide-react";
 import RightBG from "../../components/auth/RightBG";
@@ -9,7 +9,8 @@ export default function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+    const { isAuthenticated, preAuth } = useSelector(state => state.auth)
+
     const [form, setForm] = useState({ email: '', password: '', name: "" });
     const [errors, setErrors] = useState({});
 
@@ -19,9 +20,13 @@ export default function Register() {
     useEffect(() => {
 
         if (isAuthenticated) {
-            navigate("/records")
+            navigate("/")
         }
     }, [isAuthenticated, navigate])
+
+    useEffect(() => {
+        if (preAuth.authStep === 1) navigate("/auth/verify-email")
+    }, [preAuth, navigate])
 
     const validate = () => {
         const errs = {};
@@ -36,15 +41,17 @@ export default function Register() {
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
-    };
+    };  
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!validate()) return;
 
-        dispatch(registerAccount({ email: form.email, name: form.name, password: form.password }));
+        dispatch(preRegisterAccount({ email: form.email, fullname: form.name, password: form.password }));
         // Optionally navigate after login
     };
+
+
 
     return (
         <div className="min-h-screen flex ">

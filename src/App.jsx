@@ -14,6 +14,12 @@ import ErrorPage from "./pages/error";
 import Dashboard from "./pages/layouts/dashboard";
 import Booking from "./pages/Booking";
 import PropertyScreen from "./pages/PropertyScreen";
+import { uiRoute } from "./utils";
+import TokenInput from "./components/verifyWithToken";
+import TokenVerifyScreen from "./pages/auth/TokenScreen";
+
+
+
 
 
 
@@ -40,6 +46,7 @@ let router = createBrowserRouter([
         children: [
           { index: true, path: "login", Component: Login },
           { path: "register", Component: Register },
+          { path: uiRoute.verifyEmail.route.trim(), Component: TokenVerifyScreen },
           { path: "forget-password", Component: ResetPassword },
         ],
       },

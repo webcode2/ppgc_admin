@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from "axios";
 
-const SERVER_URL = `http://localhost:4000/`
 
 
 // Thunk to fetch data from API
@@ -19,6 +18,26 @@ export const loginAccount = createAsyncThunk(
         }
     }
 );
+export const preRegisterAccount = createAsyncThunk(
+    'auth/preRegisterAccount',
+    async (data, { rejectWithValue }) => {
+
+        console.log(data)
+        try {
+            const res = await axios.post(`${API_SERVER_BASE_URL}auth/request-email-verification-code`, data, {
+                headers: { "Content-Type": "application/json" }
+            })
+            console.log(res.status)
+            console.log(res);
+            return res.status === 200 || res.status === 201 ? { data } : rejectWithValue("something Went wrong")
+        } catch (err) {
+            console.log(err);
+            return rejectWithValue(err.response?.data.details || "Oops! something went wrong");
+        }
+    }
+);
+
+
 export const registerAccount = createAsyncThunk(
     'auth/registerAccount',
     async (data, { rejectWithValue }) => {
@@ -37,6 +56,9 @@ export const registerAccount = createAsyncThunk(
         }
     }
 );
+
+
+
 
 export const checkIfAuthenticated = createAsyncThunk(
     "auth/checkIfAuthenticated", async (_, { rejectWithValue }) => {
@@ -63,6 +85,13 @@ const saveToLocalStorage = ({ name, _ }) => {
 
 const initialState = {
     isAuthenticated: false,
+    preAuth: {
+        authStep: 0,
+        authName: "",
+        authEmail: "",
+        authPassword: "",
+        error: null
+    },
     user: { bio: null, roles: [], },
     isLoading: false,
     error: null,
@@ -113,29 +142,34 @@ const authSlice = createSlice({
                 state.error = action.payload;
             })
             //  For Registration
-            .addCase(registerAccount.pending, (state) => {
+            .addCase(preRegisterAccount.pending, (state) => {
                 state.isLoading = true
                 state.error = null
-            }).addCase(registerAccount.fulfilled, (state, action) => {
+            }).addCase(preRegisterAccount.fulfilled, (state, action) => {
                 console.log(action)
-                state.isAuthenticated = true
-                state.isLoading = false
-                state.user.details = {
-                    email: action.payload.email,
-                    registeredAt: action.payload.createdAt,
-                    name: action.payload.name,
-                    id: action.payload.id,
-                    token: action.payload.jwt_token
-
+                state.preAuth = {
+                    ...action.payload,
+                    authStep: state.preAuth.authStep + 1
                 }
-                state.user.device = { id: action.payload.device.id, name: action.payload.device.name }
 
-                saveToLocalStorage({ _: state.user.details, name: "userDeails" })
             })
-            .addCase(registerAccount.rejected, (state, action) => {
+            .addCase(preRegisterAccount.rejected, (state, action) => {
+                state.preAuth.authStep = 1; // set to 1 on failure
                 state.error = action.payload
                 state.isLoading = false
 
+            })
+            .addCase(registerAccount.pending, (state) => {
+
+            }).addCase(registerAccount.fulfilled, (state, action) => {
+
+                // 
+
+                saveToLocalStorage({ _: state.user.details, name: "userDeails" })
+
+
+            }).addCase(registerAccount.rejected, (state, action) => {
+                state.preAuth.error = action.payload
             })
 
     }

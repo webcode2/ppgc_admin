@@ -16,3 +16,25 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.otp-container {
+  display: flex;
+  gap: 0.5rem; /* Tailwind gap-2 */
+}
+
+.otp-input {
+  padding: 0.75rem; /* Tailwind p-3 */
+  width: 3rem; /* Tailwind w-12 */
+  height: 3rem; /* Tailwind h-12 */
+  border: 1px solid #d1d5db; /* Tailwind border-gray-300 */
+  background-color: white; /* Tailwind bg-white */
+  border-radius: 0.75rem; /* Tailwind rounded-xl */
+  text-align: center; /* Tailwind text-center */
+  font-size: 1.125rem; /* Tailwind text-lg */
+  outline: none; /* Tailwind focus:outline-none */
+}
+
+.otp-input:focus {
+  border-color: #3b82f6; /* Tailwind focus:ring-blue-500 */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Tailwind focus:ring-2 focus:ring-opacity-50 */
+}
