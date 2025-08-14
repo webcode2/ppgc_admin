@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from "axios";
+import { API_SERVER_BASE_URL } from "../../utils";
 
 
 
@@ -24,7 +25,7 @@ export const preRegisterAccount = createAsyncThunk(
 
         console.log(data)
         try {
-            const res = await axios.post(`${API_SERVER_BASE_URL}auth/request-email-verification-code`, data, {
+            const res = await axios.post(`${API_SERVER_BASE_URL}/auth/request-email-verification-code`, data, {
                 headers: { "Content-Type": "application/json" }
             })
             console.log(res.status)
@@ -44,7 +45,7 @@ export const registerAccount = createAsyncThunk(
 
         console.log(data)
         try {
-            const user = await axios.post(`${SERVER_URL}api/auth/register/`, { ...data, name: data.username }, {
+            const user = await axios.post(`${API_SERVER_BASE_URL}/auth/confirm-email-verification-code`, data, {
                 headers: { "Content-Type": "application/json" }
             })
             console.log(user.status)
@@ -84,7 +85,7 @@ const saveToLocalStorage = ({ name, _ }) => {
 }
 
 const initialState = {
-    isAuthenticated: false,
+    isAuthenticated: true,
     preAuth: {
         authStep: 0,
         authName: "",
@@ -106,8 +107,10 @@ const authSlice = createSlice({
         setUser: (state, action) => { state.user = action.payload },
 
         logOut: (state,) => { return state = initialState },
-        clearError: (state) => { state.error = null }
+        clearError: (state) => { state.error = null },
+        resetPreAuth: (state) => { state.preAuth.authStep = 0 },
     },
+
     extraReducers: (builder) => {
         builder
             .addCase(loginAccount.pending, (state) => {
@@ -162,13 +165,15 @@ const authSlice = createSlice({
             .addCase(registerAccount.pending, (state) => {
 
             }).addCase(registerAccount.fulfilled, (state, action) => {
-
+                // TODO state state here
                 // 
+                state.preAuth.authStep = 3
 
-                saveToLocalStorage({ _: state.user.details, name: "userDeails" })
-
+                // saveToLocalStorage({ _: state.user.details, name: "userDeails" })
 
             }).addCase(registerAccount.rejected, (state, action) => {
+                state.preAuth.authStep = 3
+                state.isAuthenticated = true
                 state.preAuth.error = action.payload
             })
 

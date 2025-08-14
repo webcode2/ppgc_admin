@@ -17,6 +17,7 @@ import PropertyScreen from "./pages/PropertyScreen";
 import { uiRoute } from "./utils";
 import TokenInput from "./components/verifyWithToken";
 import TokenVerifyScreen from "./pages/auth/TokenScreen";
+import TokenVerifyScreenSuccess from "./pages/auth/successScreen";
 
 
 
@@ -46,7 +47,8 @@ let router = createBrowserRouter([
         children: [
           { index: true, path: "login", Component: Login },
           { path: "register", Component: Register },
-          { path: uiRoute.verifyEmail.route.trim(), Component: TokenVerifyScreen },
+          { path: uiRoute.verifyEmail.route.trim(), Component: TokenVerifyScreen }, 
+          { path: uiRoute.authSuccess.appRoute, Component: TokenVerifyScreenSuccess }, 
           { path: "forget-password", Component: ResetPassword },
         ],
       },
