@@ -45,11 +45,14 @@ export default function GroupedBarChart3({
 
     return (
         <div className="w-full mt-6 ">
+
             {/* <div className="mb-2 text-sm text-gray-600">{yLabel}</div> */}
             <div className="h-[${height}px]">
+
+
                 <ResponsiveContainer width="100%" height={height}>
 
-                    <Legend height={24} width={220} wrapperStyle={{ paddingBottom: 8 }} />
+                    {/* <Legend height={24} width={220} wrapperStyle={{ paddingBottom: 8 }} /> */}
                     <BarChart data={safeData} barCategoryGap={18} barGap={4}>
                         {grid && (
                             <CartesianGrid strokeDasharray="1.3"

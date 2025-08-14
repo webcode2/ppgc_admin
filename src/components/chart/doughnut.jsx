@@ -16,10 +16,10 @@ import {
 export default function DoughnutChart4({
     data,
     series = [
-        { key: "seriesA", label: "Hotel", color: "#938E07" },
-        { key: "seriesB", label: "Booking", color: "#F9F10CCC" },
-        { key: "seriesC", label: "Series C", color: "#234F68F7" },
-        { key: "seriesD", label: "Series D", color: "#699635" },
+        { key: "seriesA", label: "Comfirmed", color: "#938E07" },
+        { key: "seriesB", label: "Pending", color: "#F9F10CCC" },
+        { key: "seriesC", label: "Canceled", color: "#234F68F7" },
+        { key: "seriesD", label: "Completed", color: "#699635" },
     ],
     height = 300,
     innerRadius = "60%",
@@ -31,10 +31,10 @@ export default function DoughnutChart4({
         Array.isArray(data) && data.length
             ? data
             : [
-                { name: "Series A", value: 25 },
-                { name: "Series B", value: 35 },
-                { name: "Series C", value: 20 },
-                { name: "Series D", value: 20 },
+                { name: "Comfirmed", value: 25 },
+                { name: "Pending", value: 35 },
+                { name: "Canceled", value: 20 },
+                { name: "Completed", value: 20 },
             ];
 
     const formatter =
@@ -57,13 +57,22 @@ export default function DoughnutChart4({
                         ))}
                     </Pie>
                     <Tooltip formatter={formatter} />
-                    <Legend verticalAlign="bottom" height={36} width={150} />
+                    {/* <Legend verticalAlign="bottom" height={36} width={150} /> */}
                 </PieChart>
             </ResponsiveContainer>
-            <div className="legend">
-                {series.map(legend => (
-                    <div className=""></div>
-                ))}
+            <div className="legend space-y-3">
+                {series.map((legend) => {
+                    return (
+                        <div key={legend.key} className="flex items-center gap-2">
+                            <div
+                                className="w-8 h-8 rounded-full"
+                                style={{ backgroundColor: legend.color }}
+                            ></div>
+                            <p>{legend.label} Bookings</p>
+                        </div>
+                    );
+                })}
+
             </div>
         </div>
     );

@@ -15,13 +15,13 @@ export default function Sidebar({ navlist }) {
               {navItems.list.map(({ label, icon, to }) => (
                 <NavLink
                   key={label}
-                  to={to.startsWith('/') ? to : `/${to}`} // Ensure leading slash
-                  end={to.split('/').length <= 2}
+                  to={to.startsWith('/') ? to : `/${to}`}
+                  end={to === '/' || to === '/savings'} // match exactly for dashboard & savings
                   className={({ isActive }) =>
-                    `flex items-center space-x-4 px-4  py-2 transition-all 
-                      ${isActive
-                      ? 'bg-gradient-to-r to-[#938E07] from-[#F9F10C] text-black'
-                      : 'text-gray-700 hover:bg-gray-200 hover:text-[#938E07]'}`
+    `flex items-center space-x-4 px-4 py-2 transition-all ${isActive
+      ? 'bg-gradient-to-r to-[#938E07] from-[#F9F10C] text-black'
+                      : 'text-gray-700 hover:bg-gray-200 hover:text-[#938E07]'
+                    }`
                   }
                 >
                   <span className="text-black">{icon}</span>

@@ -2,16 +2,25 @@ import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import DashboardCard from "../components/dashboardCard";
 import GroupedBarChart3 from "../components/chart/barChart";
-import { ChartNoAxesCombined, HouseIcon, Image, UsersIcon } from "lucide-react";
+import { ChartNoAxesCombined, HouseIcon, Image, UsersIcon, Wallet } from "lucide-react";
 import DoughnutChart4 from "../components/chart/doughnut";
 import WaveLikeChart from "../components/chart/smoothGraph";
+import ChoiceDropdown from "../components/chart/chartDropDown";
 
 
 function DashBoardIndex() {
+    const allServices = [
+        { key: "seriesA", label: "Self Contains", color: "#938E07" },
+        { key: "seriesB", label: "Hotels", color: "#A1A5C1" },
+        { key: "seriesC", label: "Apartments", color: "#234F68F7" },
+        { key: "seriesD", label: "Real Estates", color: "#699635" },
+    ]
+
+
     return (
         <div className="wrapper w-full  space-y-5">
             <div className="min-w-full">
-                <DashboardCard sub_title="In the last 30 days" title="Performance Metrics" >
+                <DashboardCard sub_title="In the last 30 days" title="Performance Metrics" className="pb-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mt-5 mb-10">
                         {[
                             {
@@ -35,7 +44,7 @@ function DashBoardIndex() {
 
                             {
                                 title: "Hotel", data: {
-                                    icon: <HouseIcon size={18} className="text-[#938E07]" />,
+                                    icon: <HouseIcon className="text-[#938E07]" />,
                                     labelUp: 'Total number of bookings', valueUp: 2, labelDOwn: 'Total Rooms Available', valueDown: "30",
                                 }
                             },
@@ -49,7 +58,7 @@ function DashBoardIndex() {
 
                             {
                                 title: "Savings", data: {
-                                    icon: <HouseIcon />,
+                                    icon: <Wallet />,
                                     labelUp: 'Total Daily Pay Users', valueUp: 2, labelDOwn: 'Total Amount Saved', valueDown: "150k",
                                 }
                             },
@@ -84,21 +93,54 @@ function DashBoardIndex() {
             </div>
             <div className="w-full grid grid-cols-12 gap-5">
                 {/* Left side — top row */}
-                <div className="col-span-8">
-                    <DashboardCard className="py-0 pt-10 px-5" title="Properties Insight">
-                        <GroupedBarChart3 />
+                <div className="col-span-9">
+                    <DashboardCard className="pb-4 pt-10 px-5" title="">
+                        <div className="header flex justify-between">
+
+                            <div className="title min-w-4/12"><p className="text-lg font-bold">Properties Insight</p></div>
+                            <div className="legend  flex gap-x-4 w-7/12">
+                                <ChoiceDropdown />
+                                <div className="grid grid-cols-2 gap-3">
+                                    {allServices.map((legend) => {
+                                        return (
+                                            <div key={legend.key} className="flex items-center gap-2">
+                                                <div
+                                                    className="w-5 h-5 rounded"
+                                                    style={{ backgroundColor: legend.color }}
+                                                ></div>
+                                                <p>{legend.label} </p>
+                                            </div>
+                                        );
+                                    })
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <GroupedBarChart3 series={allServices} />
                     </DashboardCard>
                 </div>
 
                 {/* Right side — tall card spanning 2 rows */}
-                <div className="col-span-4 row-span-2">
-                    <DashboardCard className="" s title="Booking Summary" >
-                        <DoughnutChart4 />                    </DashboardCard>
+                <div className="col-span-3 row-span-2">
+                    <DashboardCard className=" px-5 " title="Booking Summary" >
+                        <DoughnutChart4 />
+                    </DashboardCard>
                 </div>
 
                 {/* Left side — bottom row */}
-                <div className="col-span-8">
-                    <DashboardCard title="Investment" className="px-5 ">
+                <div className="col-span-9">
+                    <DashboardCard title="" className="px-5 py-5 ">
+                        <div className="header flex justify-between items-start pb-5">
+
+                            <div className="title min-w-4/12"><p className="text-lg font-bold">Investments</p></div>
+                            <div className="legend  flex gap-x-4 w-7/12 justify-end">
+                                <ChoiceDropdown />
+
+                            </div>
+                        </div>
+
                         <WaveLikeChart />
                     </DashboardCard>
                 </div>
