@@ -1,6 +1,8 @@
 import React from 'react'
+import { useNavigate } from "react-router-dom"
 
 function PropertyListTable({ data }) {
+    const navigate = useNavigate()
     return (
         <div className="overflow-x-auto w-full mt-10">
             <table className="min-w-full border-collapse">
@@ -16,7 +18,10 @@ function PropertyListTable({ data }) {
                     {data.map((property, idx) => (
                         <tr
                             key={idx}
-                            className="border-b-2 border-gray-200 hover:bg-gray-50 transition-colors"
+                            onClick={() => {
+                                navigate(`/properties/${property.id}/edit/`)
+                            }}
+                            className="cursor-pointer border-b-2 border-gray-200 hover:bg-gray-50 transition-colors"
                         >
                             <td className="py-4 px-4 whitespace-nowrap">
                                 <span>{property.name}</span>

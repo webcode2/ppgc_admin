@@ -10,8 +10,8 @@ function Header({ setMenuOpen, menuOpen }) {
 
     return (
         <header className="sticky top-0 left-0 w-full bg-[#3a0a0a] shadow z-50 ">
-            <div className="flex items-center  md:px-20 px-5 py-4 ">
-                <div className="text-xl font-bold mr-10 text-white">PPGC</div>
+            <div className="flex items-center  md:px-20 px-5 py-3 ">
+                <img src="logo/logo.png" alt="" className="mr-10" srcset="" />
                 <SearchComponent onSearch={() => { }} placeholder="search" />
                 <button
                     className="md:hidden text-gray-700"
@@ -23,7 +23,7 @@ function Header({ setMenuOpen, menuOpen }) {
 
 
 
-                    <Link to={"auth/login"} className=" font-bold text-sm bg-white rounded-full p-2 ">
+                    <Link to={"/notifications"} className=" font-bold text-sm bg-white rounded-full p-2 ">
                         <Bell className="text-[#3a0a0a]" />
                     </Link>&nbsp;
                     |

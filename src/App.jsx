@@ -12,12 +12,19 @@ import ResetPassword from "./pages/auth/foget_newpost";
 import DashBoardIndex from "./pages/dashBoardIndex";
 import ErrorPage from "./pages/error";
 import Dashboard from "./pages/layouts/dashboard";
-import Booking from "./pages/Booking";
-import PropertyScreen from "./pages/PropertyScreen";
+import PropertyScreen from "./pages/proerties/PropertyScreen";
 import { uiRoute } from "./utils";
-import TokenInput from "./components/verifyWithToken";
 import TokenVerifyScreen from "./pages/auth/TokenScreen";
 import TokenVerifyScreenSuccess from "./pages/auth/successScreen";
+import Booking from "./pages/bookings/BookingPage";
+import NewBooking from "./components/booking/NewBooking";
+import NewPropertyScreen from "./pages/proerties/newProperty";
+import UpdatePropertyScreen from "./pages/proerties/updateProperty";
+import InvestmentScreen from "./pages/investment/ListAllIvestment";
+import ProfileForm from "./pages/profile/updateProfile";
+import AccountSettings from "./pages/profile/AccountSettings";
+import ProfileScreen from "./pages/profile/profile";
+import NotificationUI from "./pages/notifications";
 
 
 
@@ -36,7 +43,26 @@ let router = createBrowserRouter([
         children: [
           { index: true, Component: DashBoardIndex },
           { path: "bookings", Component: Booking },
+          { path: "bookings/new-room", Component: NewBooking },
+
+          // properties
           { path: "properties", Component: PropertyScreen },
+          { path: "properties/new-property", Component: NewPropertyScreen },
+          { path: "properties/:property_id/edit", Component: UpdatePropertyScreen },
+
+
+          // Invevstment
+          { path: "investments/", Component: InvestmentScreen },
+
+          // Profile
+          { path: "profile", Component: ProfileScreen },
+          { path: "profile/settings", Component: AccountSettings },
+          { path: "profile/update", Component: ProfileForm },
+
+          // Notification
+          { path: "notifications", Component: NotificationUI },
+
+
 
         ]
       },

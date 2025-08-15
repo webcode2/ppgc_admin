@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginAccount, registerAccount } from "../../store/slice/authSlice";
 import { useNavigate } from "react-router-dom";
-import RightBG from "../../components/auth/RightBG";
-import TokenInput from "../../components/verifyWithToken";
+import RightBG from "../../components/auth/RightBG";    
+import TokenInput from "../../components/auth/verifyWithToken";
 import { uiRoute } from "../../utils";
 import { CircleCheckBig } from "lucide-react";
 

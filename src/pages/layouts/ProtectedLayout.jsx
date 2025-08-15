@@ -5,7 +5,6 @@ import { Navigate, Outlet, useNavigate } from "react-router-dom";
 // import Footer from "../../components/footer";
 import { Bounce, ToastContainer } from "react-toastify";
 import { checkIfAuthenticated } from "../../store/slice/authSlice";
-import Modal from "../../components/Modal";
 
 
 export function ProtctedScreens() {
@@ -22,8 +21,6 @@ export function ProtctedScreens() {
 
         }
     }, [isAuthenticated, isLoading, navigate])
-
-
 
 
 
@@ -50,7 +47,6 @@ export function ProtctedScreens() {
 
     return (<div className="relative">
         <Outlet />
-        {/* <Modal /> */}
         < ToastContainer position="top-right" autoClose={3000}
             hideProgressBar={false}
             newestOnTop={false}

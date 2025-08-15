@@ -2,12 +2,9 @@ import { useState } from "react";
 
 
 
-export default function ChoiceDropdown({ data = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-] }) {
+export default function ChoiceDropdown({ data = ["This Week", "This Month", "Last six Month", "This Year"] }) {
     const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState("January");
+    const [selected, setSelected] = useState(data[0]);
 
     const handleSelect = (choice) => {
         setSelected(choice);
@@ -15,7 +12,7 @@ export default function ChoiceDropdown({ data = [
     };
 
     return (
-        <div className="relative inline-block text-left z-50">
+        <div className="relative inline-block text-left ">
             <button
                 onClick={() => setOpen((prev) => !prev)}
                 className="inline-flex justify-between w-40 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
@@ -33,7 +30,7 @@ export default function ChoiceDropdown({ data = [
             </button>
 
             {open && (
-                <div className="absolute mt-1 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                <div className="absolute mt-1 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50">
                     <ul className="py-1 text-sm text-gray-700 max-h-60 overflow-y-auto">
                         {data.map((choice) => (
                             <li key={choice}>

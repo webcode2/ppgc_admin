@@ -33,7 +33,7 @@ export default function TokenInput({ otp, setOtp, length = 5 }) {
                     onChange={(e) => handleChange(e.target.value, i)}
                     onKeyDown={(e) => handleKeyDown(e, i)}
                     className="w-14 h-14 border border-gray-300 rounded-xl text-center text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent"
-        />
+                />
             ))}
         </div>
     );

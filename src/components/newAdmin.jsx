@@ -24,13 +24,14 @@ const navItems = [
             { label: 'Bookings', to: '/bookings', icon: <PencilLine size={26} /> },
             { label: 'Properties', to: '/properties', icon: <ClipboardList size={26} /> },
             { label: 'Savings', to: '/savings', icon: <Wallet size={26} /> },
-            { label: 'Investment', to: '/investment', icon: <Settings size={26} /> },
+            { label: 'Investment', to: '/investments', icon: <Settings size={26} /> },
         ],
     },
     {
         title: 'Preferences',
         list: [
-            { label: 'Account Settings', to: 'account-settings', icon: <UserCog size={26} /> },
+            { label: 'Account Settings', to: 'profile', icon: <UserCog size={26} /> },
+            // { label: 'Account Settings', to: 'account-settings', icon: <UserCog size={26} /> },
             { label: 'Notifications', to: 'notifications', icon: <Bell size={26} /> },
             { label: 'Security', to: 'security', icon: <ShieldCheck size={26} /> },
         ],

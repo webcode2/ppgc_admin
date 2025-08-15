@@ -94,7 +94,7 @@ function DashBoardIndex() {
             <div className="w-full grid grid-cols-12 gap-5">
                 {/* Left side — top row */}
                 <div className="col-span-9">
-                    <DashboardCard className="pb-4 pt-10 px-5" title="">
+                    <DashboardCard className="pb-4 pt-10 px-5" title="" showHeader={false}>
                         <div className="header flex justify-between">
 
                             <div className="title min-w-4/12"><p className="text-lg font-bold">Properties Insight</p></div>
@@ -124,14 +124,19 @@ function DashBoardIndex() {
 
                 {/* Right side — tall card spanning 2 rows */}
                 <div className="col-span-3 row-span-2">
-                    <DashboardCard className=" px-5 " title="Booking Summary" >
+                    <DashboardCard className=" px-5 " showHeader={false} >
+                        <div className="header flex justify-between items-start pb-5">
+
+                            <div className="title min-w-6/12"><p className="text-lg font-bold">Bookings Summery</p></div>
+
+                        </div>
                         <DoughnutChart4 />
                     </DashboardCard>
                 </div>
 
                 {/* Left side — bottom row */}
                 <div className="col-span-9">
-                    <DashboardCard title="" className="px-5 py-5 ">
+                    <DashboardCard title="" className="px-5 py-5 " showHeader={false}>
                         <div className="header flex justify-between items-start pb-5">
 
                             <div className="title min-w-4/12"><p className="text-lg font-bold">Investments</p></div>

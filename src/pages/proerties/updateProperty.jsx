@@ -1,23 +1,18 @@
 import React, { useState } from 'react'
-import DashboardCard from "../components/dashboardCard"
-import PropertyListTable from "../components/propertyListTable"
-import { propertyList } from "../store/dummy"
-import FileUpload from "../components/fileUpload"
-import FacilitiesSelect from "../components/new_property/propertyFacilitySecetion"
+import DashboardCard from "../../components/dashboardCard";
+import FileUpload from "../../components/fileUpload";
+import FacilitiesSelect from "../../components/properties/propertyFacilitySecetion";
+import { useNavigate } from "react-router-dom";
 
-function PropertyScreen() {
+function UpdatePropertyScreen() {
     const [selectedFacilities, setSelectedFacilities] = useState([]);
 
     return (
         <div className="space-y-6 ">
-            <DashboardCard title="Properties Listed">
-                <PropertyListTable data={propertyList} />
-            </DashboardCard>
-
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className=" md:row-span-2 h-full">
-                    <DashboardCard title="Add New Property">
+                    <DashboardCard title="Update Property" showDropDown={false}>
                         <div className="space-y-6 mt-10 bord">
 
                             {/* Grid for top fields */}
@@ -56,7 +51,7 @@ function PropertyScreen() {
                                     Description
                                 </label>
                                 <textarea
-                                    rows="6"
+                                    rows="10"
                                     placeholder="add description"
                                     className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
                                 ></textarea>
@@ -99,8 +94,8 @@ function PropertyScreen() {
 
                 {/* Cell 2 */}
                 <div className=" h-full">
-                    <DashboardCard title="Property Photos">
-                        <div className="mt-10">
+                    <DashboardCard title="Update Property Photos" showDropDown={false} className="py-5">
+                        <div className="mt-5">
                             <FileUpload
                                 onDropFile={(files) => {
                                     console.log('Uploaded files:', files);
@@ -114,19 +109,22 @@ function PropertyScreen() {
 
                 {/* Cell 3 */}
                 <div className="    h-full ">
-                    <DashboardCard title="Main Facilities">
-                        <div className="mt-10">
+                    <DashboardCard title="Update Main Facilities" className="py-5" showDropDown={false}>
+                        <div className="mt-5">
                             <FacilitiesSelect selected={selectedFacilities} onChange={setSelectedFacilities} />
                         </div>
                     </DashboardCard >
                 </div>
-                
+
+                <div className="actionbtn">
+
+                </div>
+
             </div>
-            <div className="w-full">
-            </div>
+
 
         </div >
     )
 }
 
-export default PropertyScreen
+export default UpdatePropertyScreen
