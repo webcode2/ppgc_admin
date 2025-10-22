@@ -24,7 +24,7 @@ export default function DoughnutChart4({
     height = 300,
     innerRadius = "60%",
     outerRadius = "100%",
-    tooltipFormatter,
+    tooltipFormatter = ((value, name) => [`${value}`, name]),
 }) {
     // Provide default data if none passed
     const safeData =
@@ -38,7 +38,7 @@ export default function DoughnutChart4({
             ];
 
     const formatter =
-        tooltipFormatter || ((value, name) => [`${value}`, name]);
+        tooltipFormatter
 
     return (
         <div className="w-full">

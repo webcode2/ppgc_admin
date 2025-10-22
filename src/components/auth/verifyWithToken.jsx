@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 
-export default function TokenInput({ otp, setOtp, length = 5 }) {
+export default function TokenInput({ otp, setOtp, length = 4 }) {
     const inputsRef = useRef([]);
 
     const handleChange = (value, index) => {

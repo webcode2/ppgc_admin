@@ -1,8 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
+import { logOut } from "../store/slice/authSlice";
+import { useDispatch } from "react-redux";
 
-export default function Sidebar({ navlist }) {
+export default function   Sidebar({ navlist }) {
+  const dispatch = useDispatch()
   return (
     <aside className="w-56 hidden md:flex flex-col justify-between  items-center pt-8 border-r border-gray-200">
       <div className="w-full ">
@@ -34,7 +37,7 @@ export default function Sidebar({ navlist }) {
       </div>
 
       <div className="flex justify-between items-start w-full px-6">
-        <button className="flex items-start space-x-2 text-red-500 hover:text-red-600 text-sm">
+        <button onClick={() => { dispatch(logOut()) }} className="flex items-start space-x-2 cursor-pointer text-red-500 hover:text-red-600 text-sm">
           <LogOut size={28} />
           <span className=" font-semibold">Logout</span>
         </button></div>

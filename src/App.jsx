@@ -2,29 +2,33 @@
 import "./index.css";
 import {
   createBrowserRouter,
+  Navigate,
+  Outlet,
 } from "react-router";
-import Home from "./pages/Home";
-import { ProtctedScreens } from "./pages/layouts/ProtectedLayout";
 import DefaultScreen from "./pages/layouts/DefaultScreen";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import ResetPassword from "./pages/auth/foget_newpost";
 import DashBoardIndex from "./pages/dashBoardIndex";
 import ErrorPage from "./pages/error";
-import Dashboard from "./pages/layouts/dashboard";
-import PropertyScreen from "./pages/proerties/PropertyScreen";
-import { uiRoute } from "./utils";
+import { uiRoute } from "./utils/utils";
 import TokenVerifyScreen from "./pages/auth/TokenScreen";
 import TokenVerifyScreenSuccess from "./pages/auth/successScreen";
 import Booking from "./pages/bookings/BookingPage";
-import NewBooking from "./components/booking/NewBooking";
-import NewPropertyScreen from "./pages/proerties/newProperty";
+import NewBooking from "./pages/bookings/NewBooking";
+import PropertyWizard from "./pages/proerties/newProperty";
 import UpdatePropertyScreen from "./pages/proerties/updateProperty";
 import InvestmentScreen from "./pages/investment/ListAllIvestment";
 import ProfileForm from "./pages/profile/updateProfile";
 import AccountSettings from "./pages/profile/AccountSettings";
 import ProfileScreen from "./pages/profile/profile";
 import NotificationUI from "./pages/notifications";
+import NewHotel from "./pages/hotels/newHotel";
+import Hotel from "./pages/hotels/hotelList";
+import EditHotel from "./pages/hotels/updateHotel";
+import NewRoom from "./pages/hotels/addHotelRoom";
+import PropertyScreen from "./pages/proerties/PropertyScreen";
+import { ProtectedScreen } from "./pages/layouts/ProtectedLayout";
 
 
 
@@ -34,54 +38,62 @@ import NotificationUI from "./pages/notifications";
 let router = createBrowserRouter([
   {
     path: "/",
-    Component: DefaultScreen,
+    element: <ProtectedScreen />,
+    // element: <Outlet />,
     children: [
-
       // Main App
-      {
-        path: "/", Component: Dashboard,
-        children: [
-          { index: true, Component: DashBoardIndex },
-          { path: "bookings", Component: Booking },
-          { path: "bookings/new-room", Component: NewBooking },
 
-          // properties
-          { path: "properties", Component: PropertyScreen },
-          { path: "properties/new-property", Component: NewPropertyScreen },
-          { path: "properties/:property_id/edit", Component: UpdatePropertyScreen },
+      { index: true, Component: DashBoardIndex },
+      // Hotels
+      { path: "/hotels", Component: Hotel },
+      { path: "hotels/new", Component: NewHotel },
+      { path: "hotels/:hotel_id/edit", Component: EditHotel },
+
+      { path: "hotels/:hotel_id/rooms/create", Component: NewRoom },
 
 
-          // Invevstment
-          { path: "investments/", Component: InvestmentScreen },
+      { path: "bookings", Component: Booking },
+      { path: "bookings/new-room", Component: NewBooking },
 
-          // Profile
-          { path: "profile", Component: ProfileScreen },
-          { path: "profile/settings", Component: AccountSettings },
-          { path: "profile/update", Component: ProfileForm },
-
-          // Notification
-          { path: "notifications", Component: NotificationUI },
+      // properties
+      { path: "properties", Component: PropertyScreen },
+      { path: "properties/new-property", Component: PropertyWizard },
+      { path: "properties/:property_id/edit", Component: UpdatePropertyScreen },
 
 
+      // Invevstment
+      { path: "investments/", Component: InvestmentScreen },
 
-        ]
-      },
-      // Authentication ROute
+      // Profile
+      { path: "profile", Component: ProfileScreen },
+      { path: "profile/settings", Component: AccountSettings },
+      { path: "profile/update", Component: ProfileForm },
 
-      {
-        path: "auth/", Component: DefaultScreen,
-        children: [
-          { index: true, path: "login", Component: Login },
-          { path: "register", Component: Register },
-          { path: uiRoute.verifyEmail.route.trim(), Component: TokenVerifyScreen }, 
-          { path: uiRoute.authSuccess.appRoute, Component: TokenVerifyScreenSuccess }, 
-          { path: "forget-password", Component: ResetPassword },
-        ],
-      },
+      // Notification
+      { path: "notifications", Component: NotificationUI },
 
-      { path: "*", Component: ErrorPage }
+
+
+
+
+
     ]
   },
+  // Authentication ROute
+  {
+    path: "/auth/", Component: Outlet,
+    children: [
+      { index: true, element: <Navigate to="login" replace /> },
+      { path: "login", Component: Login },
+      { path: "register", Component: Register },
+      { path: "forget-password", Component: ResetPassword },
+
+      { path: uiRoute.verifyEmail.route.trim(), Component: TokenVerifyScreen },
+      { path: uiRoute.authSuccess.appRoute, Component: TokenVerifyScreenSuccess },
+    ],
+  },
+  // Page not found Error 
+  { path: "*", Component: ErrorPage }
 
 
 ]);

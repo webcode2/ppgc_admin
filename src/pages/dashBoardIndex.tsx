@@ -14,8 +14,16 @@ function DashBoardIndex() {
         { key: "seriesB", label: "Hotels", color: "#A1A5C1" },
         { key: "seriesC", label: "Apartments", color: "#234F68F7" },
         { key: "seriesD", label: "Real Estates", color: "#699635" },
-    ]
 
+
+    ]
+    const data = [
+        { "name": "Week 1", seriesA: 12, seriesB: 18, seriesC: 9, seriesD: 4 },
+        { "name": "Week 2", seriesA: 20, seriesB: 11, seriesC: 14, seriesD: 20 },
+        { "name": "Week 3", seriesA: 15, seriesB: 22, seriesC: 17, seriesD: 20 },
+        { "name": "Week 4", seriesA: 25, seriesB: 16, seriesC: 13, seriesD: 10 },
+        { "name": "Week 5", seriesA: 30, seriesB: 24, seriesC: 19, seriesD: 5 },
+    ]
 
     return (
         <div className="wrapper w-full  space-y-5">
@@ -67,7 +75,7 @@ function DashBoardIndex() {
                         ].map((card, i) => (
                             <motion.div
                                 key={i}
-                                className={`rounded-xl p-4 border border-[#938E07] transition ${card.color}`}
+                                className={`rounded-xl p-4 border border-[#938E07] transition`}
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.4, delay: i * 0.1 }}
@@ -118,7 +126,7 @@ function DashBoardIndex() {
                         </div>
 
 
-                        <GroupedBarChart3 series={allServices} />
+                        <GroupedBarChart3 data={data} series={allServices} />
                     </DashboardCard>
                 </div>
 
@@ -130,7 +138,12 @@ function DashBoardIndex() {
                             <div className="title min-w-6/12"><p className="text-lg font-bold">Bookings Summery</p></div>
 
                         </div>
-                        <DoughnutChart4 />
+                        <DoughnutChart4 data={[
+                            { name: "Comfirmed", value: 25 },
+                            { name: "Pending", value: 35 },
+                            { name: "Canceled", value: 20 },
+                            { name: "Completed", value: 20 },
+                        ]} />
                     </DashboardCard>
                 </div>
 
@@ -146,7 +159,14 @@ function DashBoardIndex() {
                             </div>
                         </div>
 
-                        <WaveLikeChart />
+                        <WaveLikeChart data={[
+                            { name: "Jan", value: 40 },
+                            { name: "Feb", value: 80 },
+                            { name: "Mar", value: 50 },
+                            { name: "Apr", value: 90 },
+                            { name: "May", value: 60 },
+                            { name: "Jun", value: 100 },
+                        ]} />
                     </DashboardCard>
                 </div>
             </div>

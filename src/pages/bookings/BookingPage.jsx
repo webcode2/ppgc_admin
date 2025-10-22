@@ -42,7 +42,7 @@ function Booking() {
             < AvailableBookingTable data={rooms.slice(0, 4)} />
 
         </DashboardCard>
-        <FloatingAddButton className="   bg-transparent border-[#7f7a06] border rounded-lg text-[#7f7a06] active:scale-95 transition-all" onClick={() => {
+        <FloatingAddButton className="   bg-transparent border-[#7f7a06] border rounded-full text-[#7f7a06] active:scale-95 transition-all" onClick={() => {
             navigate("/bookings/new-room")
         }} />
 

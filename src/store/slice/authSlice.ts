@@ -1,20 +1,24 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from "axios";
-import { API_SERVER_BASE_URL } from "../../utils";
+import { API_SERVER_BASE_URL } from "../../utils/utils";
+import { jwtDecode } from "jwt-decode";
+
 
 
 
 // Thunk to fetch data from API
 export const loginAccount = createAsyncThunk(
     'auth/loginAccount',
-    async (data, { rejectWithValue }) => {
+    async (data: { email: string, password: string }, { rejectWithValue }) => {
         console.log(data)
         try {
-            const user = await axios.post(`${SERVER_URL}api/auth/login`, data, {
+            const user = await axios.post(`${API_SERVER_BASE_URL}/auth/signin`, data, {
                 headers: { "Content-Type": "application/json" }
             })
+            console.log(user)
             return user.status === 200 ? user.data : rejectWithValue("something Went wrong")
         } catch (err) {
+            console.log(err);
             return rejectWithValue(err.response.data);
         }
     }
@@ -28,8 +32,9 @@ export const preRegisterAccount = createAsyncThunk(
             const res = await axios.post(`${API_SERVER_BASE_URL}/auth/request-email-verification-code`, data, {
                 headers: { "Content-Type": "application/json" }
             })
-            console.log(res.status)
             console.log(res);
+
+
             return res.status === 200 || res.status === 201 ? { data } : rejectWithValue("something Went wrong")
         } catch (err) {
             console.log(err);
@@ -80,24 +85,60 @@ export const checkIfAuthenticated = createAsyncThunk(
     }
 )
 
-const saveToLocalStorage = ({ name, _ }) => {
-    localStorage.setItem(name, JSON.stringify(_))
+// Utility: Save to local storage
+const saveToLocalStorage = (name: string, value: any) => {
+    localStorage.setItem(name, JSON.stringify(value));
+};
+
+// Status type
+type Status = "idle" | "loading" | "succeeded" | "failed";
+
+// User model
+interface User {
+    jwtSub: string;
+    bio: string | null;
+    roles: string[];
+    first_name: string;
+    last_name: string;
+    email: string;
+    access_token: string;
+    refresh_token: string;
 }
 
-const initialState = {
-    isAuthenticated: true,
+// Pre-auth state
+interface PreAuthState {
+    authStep: number;
+    authName: string;
+    authEmail: string;
+    authPassword: string;
+    error: string | null;
+}
+
+// Auth state
+interface AuthState {
+    status: Status;
+    isAuthenticated: boolean;
+    preAuth: PreAuthState;
+    user: User | null;
+    isLoading: boolean;
+    error: string | null;
+}
+
+const initialState: AuthState = {
+    status: "idle",
+    isAuthenticated: false,
     preAuth: {
         authStep: 0,
         authName: "",
         authEmail: "",
         authPassword: "",
-        error: null
+        error: null,
     },
-    user: { bio: null, roles: [], },
+    user: null,
     isLoading: false,
     error: null,
+};
 
-}
 
 const authSlice = createSlice({
     name: 'auth',
@@ -106,7 +147,10 @@ const authSlice = createSlice({
         busyAccount: (state, action) => { action.payload === undefined ? state.isLoading = true : state.isLoading = action.payload },
         setUser: (state, action) => { state.user = action.payload },
 
-        logOut: (state,) => { return state = initialState },
+        logOut: (state,) => {
+            localStorage.removeItem("userDetails");
+            return state = initialState
+        },
         clearError: (state) => { state.error = null },
         resetPreAuth: (state) => { state.preAuth.authStep = 0 },
     },
@@ -116,19 +160,34 @@ const authSlice = createSlice({
             .addCase(loginAccount.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
+                state.status = "loading";
             })
-            .addCase(loginAccount.fulfilled, (state, action) => {
+            .addCase(loginAccount.fulfilled, (state, action: PayloadAction<User>) => {
+                const decoded: any = jwtDecode(action.payload.access_token);
+                const jwtSub = decoded?.sub || "";
 
-                state.isAuthenticated = true
+                const user: User = {
+                    jwtSub,
+                    bio: action.payload.bio || null,
+                    roles: action.payload.roles || [],
+                    first_name: action.payload.first_name,
+                    last_name: action.payload.last_name,
+                    email: action.payload.email,
+                    access_token: action.payload.access_token,
+                    refresh_token: action.payload.refresh_token,
+                };
+
+                state.user = user;
+                state.isAuthenticated = true;
                 state.isLoading = false;
-                state.user.details = action.payload.user
-                state.user.roles = action.payload.roles
-                saveToLocalStorage({ _: state.user.details, name: "userDetails" })
+                state.status = "succeeded";
+
+                saveToLocalStorage("userDetails", user);
             })
-
-            .addCase(loginAccount.rejected, (state, action) => {
+            .addCase(loginAccount.rejected, (state, action: any) => {
                 state.isLoading = false;
-                state.error = action.payload;
+                state.status = "failed";
+                state.error = action.error?.message || "Login failed";
             })
             // Check if authenticated cases
             .addCase(checkIfAuthenticated.pending, (state) => {
@@ -136,13 +195,28 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(checkIfAuthenticated.fulfilled, (state, action) => {
-                state.isAuthenticated = true
+                const user: User = {
+                    jwtSub: action.payload.jwtSub,
+                    bio: action.payload.bio || null,
+                    roles: action.payload.roles || [],
+                    first_name: action.payload.first_name,
+                    last_name: action.payload.last_name,
+                    email: action.payload.email,
+                    access_token: action.payload.access_token,
+                    refresh_token: action.payload.refresh_token,
+                };
+
+                state.user = user;
+                state.isAuthenticated = true;
                 state.isLoading = false;
-                state.user.details = action.payload;
+                state.status = "succeeded";
             })
             .addCase(checkIfAuthenticated.rejected, (state, action) => {
                 state.isLoading = false;
-                state.error = action.payload;
+                state.error =
+                    (action.payload as string) ||
+                    action.error?.message ||
+                    "Authentication check failed";
             })
             //  For Registration
             .addCase(preRegisterAccount.pending, (state) => {
@@ -150,18 +224,18 @@ const authSlice = createSlice({
                 state.error = null
             }).addCase(preRegisterAccount.fulfilled, (state, action) => {
                 console.log(action)
-                state.preAuth = {
-                    ...action.payload,
-                    authStep: state.preAuth.authStep + 1
-                }
+                //    Store the and proced to thhe next step
 
             })
             .addCase(preRegisterAccount.rejected, (state, action) => {
-                state.preAuth.authStep = 1; // set to 1 on failure
-                state.error = action.payload
+                state.error =
+                    (action.payload as string) ||
+                    action.error?.message ||
+                    "New Registration failed";
                 state.isLoading = false
 
             })
+
             .addCase(registerAccount.pending, (state) => {
 
             }).addCase(registerAccount.fulfilled, (state, action) => {
@@ -174,7 +248,9 @@ const authSlice = createSlice({
             }).addCase(registerAccount.rejected, (state, action) => {
                 state.preAuth.authStep = 3
                 state.isAuthenticated = true
-                state.preAuth.error = action.payload
+                state.preAuth.error = (action.payload as string) ||
+                    action.error?.message ||
+                    "Registration failed";
             })
 
     }

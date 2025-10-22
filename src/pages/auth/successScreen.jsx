@@ -4,7 +4,7 @@ import { loginAccount, registerAccount } from "../../store/slice/authSlice";
 import { useNavigate } from "react-router-dom";
 import RightBG from "../../components/auth/RightBG";    
 import TokenInput from "../../components/auth/verifyWithToken";
-import { uiRoute } from "../../utils";
+import { uiRoute } from "../../utils/utils";
 import { CircleCheckBig } from "lucide-react";
 
 export default function TokenVerifyScreenSuccess() {

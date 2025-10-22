@@ -1,11 +1,27 @@
 import { useState } from "react";
-import DashboardCard from "../dashboardCard";
-import FileUpload from "../fileUpload";
-import FacilitiesSelect from "../properties/propertyFacilitySecetion";
+import DashboardCard from "../../components/dashboardCard";
+import FileUpload from "../../components/fileUpload";
+import FacilitiesSelect from "../../components/properties/propertyFacilitySecetion";
+import { useDispatch } from "react-redux";
+import { OutlineButton, SolidButton } from "../../components/buttons";
 
 
 function NewBooking() {
-  const [selectedFacilities, setSelectedFacilities] = useState([]);
+  const dispatch = useDispatch();
+
+
+  const [booking, setBooking] = useState({ facilities: [] });
+
+  const setSelectedFacilities = (e) => {
+    setBooking({ ...booking, facilities: e })
+  }
+
+
+  const handleSave = () => {
+    // dispatch(createProperty(booking))
+    console.log(booking)
+
+  }
 
   return (
     <div className="space-y-6 ">
@@ -25,8 +41,10 @@ function NewBooking() {
                     Room Name/No
                   </label>
                   <input
+                    name="room_name"
                     type="text"
                     placeholder="property name"
+                    onChange={(e) => setBooking({ ...booking, [e.target.name]: e.target.value })}
                     className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
@@ -37,7 +55,9 @@ function NewBooking() {
                     Prie
                   </label>
                   <input
+                    onChange={(e => setBooking({ ...booking, [e.target.name]: e.target.value }))}
                     type="number"
+                    name="price"
                     placeholder="Price"
                     className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -50,21 +70,24 @@ function NewBooking() {
                   Description
                 </label>
                 <textarea
+                  name="description"
                   rows="6"
                   placeholder="add description"
+                  onChange={(e) => setBooking({ ...booking, [e.target.name]: e.target.value })}
                   className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
                 ></textarea>
               </div>
 
               {/* Grid for floor & bedrooms */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Total Floor */}
                 <div>
                   <label className="block text-gray-600 mb-1 text-sm font-medium">
                     Review
                   </label>
                   <div className="flex items-center">
                     <input
+                      name="review"
+                      onChange={(e) => setBooking({ ...booking, [e.target.name]: e.target.value })}
                       type="number"
                       defaultValue="0"
                       className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
@@ -82,6 +105,8 @@ function NewBooking() {
                     <input
                       type="number"
                       defaultValue="0"
+                      name="bedrooms"
+                      onChange={(e) => setBooking({ ...booking, [e.target.name]: e.target.value })}
                       className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
                     />
                     <span className="ml-2 text-gray-500 text-sm">room(s)</span>
@@ -98,6 +123,7 @@ function NewBooking() {
               <FileUpload
                 onDropFile={(files) => {
                   console.log('Uploaded files:', files);
+                  booking.photos = files;
                   // TODO: handle upload to server / cloud storage
                 }}
               />
@@ -110,13 +136,15 @@ function NewBooking() {
         <div className="    h-full ">
           <DashboardCard title="Main Facilities" className="" showDropDown={false}>
             <div className="mt-10">
-              <FacilitiesSelect selected={selectedFacilities} onChange={setSelectedFacilities} />
+              <FacilitiesSelect selected={booking.facilities} onChange={setSelectedFacilities} />
             </div>
           </DashboardCard >
         </div>
 
       </div>
-      <div className="w-full">
+      <div className="actionbtn gap-x-5 flex justify-end items-center w-full pb-5">
+        <OutlineButton className="active:scale-95 transition-all ease-in-out">cancel</OutlineButton>
+        <SolidButton onClick={handleSave} className="active:scale-95 transition-all ease-in-out border border-[#938E07]">Save</SolidButton>
       </div>
     </div >
   )

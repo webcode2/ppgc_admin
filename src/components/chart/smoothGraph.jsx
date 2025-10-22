@@ -20,7 +20,7 @@ export default function WaveLikeChart({
     yKey = "value",
     color = "#938E07",
     height = 160,
-    tooltipFormatter,
+    tooltipFormatter = ((value, name) => [value, name]),
     grid = true,
 }) {
     const safeData =
@@ -35,7 +35,7 @@ export default function WaveLikeChart({
                 { name: "Jun", value: 100 },
             ];
 
-    const formatter = tooltipFormatter || ((value, name) => [value, name]);
+    const formatter = tooltipFormatter
 
     return (
         <div className="w-full">

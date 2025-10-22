@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkIfAuthenticated, preRegisterAccount, registerAccount } from "../../store/slice/authSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { KeyRoundIcon, KeySquareIcon, Mail, MailIcon, User, UserCircle } from "lucide-react";
+import { KeyRoundIcon, KeySquareIcon, Loader2, Mail, MailIcon, User, UserCircle } from "lucide-react";
 import RightBG from "../../components/auth/RightBG";
 
 export default function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
-    const { isAuthenticated, preAuth } = useSelector(state => state.auth)
+    const { isAuthenticated, preAuth, isLoading } = useSelector(state => state.auth)
 
     const [form, setForm] = useState({ email: '', password: '', name: "" });
     const [errors, setErrors] = useState({});
@@ -118,9 +118,14 @@ export default function Register() {
 
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white cursor-pointer font-semibold py-2 px-4 rounded-full bg-[linear-gradient(0deg,#938E07,#F9F10C)] active:scale-95 transition-transform duration-200 focus:ring-opacity-50"
+                        disabled={isLoading} // prevent double-submit while loading
+                        className={`    w-full flex items-center justify-center    font-semibold py-2 px-4 rounded-full    bg-[linear-gradient(0deg,#938E07,#F9F10C)]    text-white shadow-md    transition-all duration-200    active:scale-95 focus:outline-none focus:ring-2 focus:ring-yellow-400    ${isLoading ? "opacity-70 cursor-default" : "cursor-pointer"}  `}
                     >
-                        Sign Up
+                        {isLoading ? (
+                            <Loader2 className="animate-spin" size={22} />
+                        ) : (
+                            "Sign Up"
+                        )}
                     </button>
                     <p className="text-xs mt-5 text-center">  already have an Account with us? <Link to={"/auth/login"} className="text-[#938E07]">login</Link></p>
                 </form>

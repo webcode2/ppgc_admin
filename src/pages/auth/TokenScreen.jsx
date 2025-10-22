@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import RightBG from "../../components/auth/RightBG";
 import TokenInput from "../../components/auth/verifyWithToken";
-import { uiRoute } from "../../utils";
+import { uiRoute } from "../../utils/utils";
+import { registerAccount } from "../../store/slice/authSlice";
 
 export default function TokenVerifyScreen() {
     const dispatch = useDispatch();
@@ -54,12 +55,13 @@ export default function TokenVerifyScreen() {
     const handleSubmit = (e) => {
         e.preventDefault();
         // dispatch(loginAccount());
+
         dispatch(registerAccount(
             {
                 "password": preAuth.authPassword,
                 "fullname": preAuth.authName,
                 "email": preAuth.authEmail,
-                "pin": otp,
+                "pin": "",
                 "code": otp
             }
         ))

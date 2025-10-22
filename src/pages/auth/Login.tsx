@@ -1,39 +1,81 @@
-import { KeyRoundIcon, Mail } from "lucide-react";
+import { KeyRoundIcon, Loader2, Mail } from "lucide-react";
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkIfAuthenticated, loginAccount } from "../../store/slice/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import RightBG from "../../components/auth/RightBG";
+import { AppDispatch, RootState } from "../../store";
+
+interface FormData {
+    email: string;
+    password: string;
+}
+
+interface FormErrors {
+    email?: string;
+    password?: string;
+}
 
 export default function Login() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const navigate = useNavigate()
 
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+    const { isAuthenticated, isLoading } = useSelector((state: RootState) => state.auth)
 
-    const [form, setForm] = useState({ email: '', password: '' });
-    const [errors, setErrors] = useState({});
+    const [form, setForm] = useState<FormData>({ email: '', password: '' });
+    const [errors, setErrors] = useState<FormErrors>({ password: "", email: "" });
 
     useEffect(() => {
-        dispatch(checkIfAuthenticated())
-    }, [])
+        // Perform one-time auth check on mount
+        dispatch(checkIfAuthenticated());
+    }, [dispatch]);
+
     useEffect(() => {
+        // Wait until loading completes before deciding
+        if (isLoading) return;
 
         if (isAuthenticated) {
-            navigate("/records")
+            const params = new URLSearchParams(location.search);
+            const redirect = params.get("redirect");
+
+            // Prevent null/undefined redirect values
+            const target = redirect && redirect !== "null" ? decodeURIComponent(redirect) : "/";
+
+            navigate(target, { replace: true });
         }
-    }, [isAuthenticated, navigate])
+    }, [isAuthenticated, isLoading, navigate]);
 
 
 
-    const validate = () => {
-        const errs = {};
-        if (!form.email.includes('@')) errs.email = 'Invalid email';
-        if (form.password.length < 6) errs.password = 'Minimum 6 characters required';
+
+
+
+
+
+
+
+    const validate = (form: FormData, setErrors: (errors: FormErrors) => void): boolean => {
+        const errs: FormErrors = {};
+
+        if (!form.email || !form.email.includes('@')) {
+            errs.email = 'Invalid email';
+        }
+
+        if (!form.password || form.password.length < 6) {
+            errs.password = 'Minimum 6 characters required';
+        }
+
         setErrors(errs);
         return Object.keys(errs).length === 0;
     };
+
+
+
+
+
+
+
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -41,9 +83,10 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!validate()) return;
-
+        if (!validate(form, setErrors)) return;
+        console.log("data")
         dispatch(loginAccount({ email: form.email, password: form.password }));
+
         // Optionally navigate after login
     };
 
@@ -100,10 +143,15 @@ export default function Login() {
 
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white cursor-pointer font-semibold py-2 px-4 rounded-full bg-[linear-gradient(0deg,#938E07,#F9F10C)] active:scale-95 transition-transform duration-200 focus:ring-opacity-50">
-                        Sign In
+                        disabled={isLoading} // prevent double-submit while loading
+                        className={`    w-full flex items-center justify-center    font-semibold py-2 px-4 rounded-full    bg-[linear-gradient(0deg,#938E07,#F9F10C)]    text-white shadow-md    transition-all duration-200    active:scale-95 focus:outline-none focus:ring-2 focus:ring-yellow-400    ${isLoading ? "opacity-70 cursor-default" : "cursor-pointer"}  `}
+                    >
+                        {isLoading ? (
+                            <Loader2 className="animate-spin" size={22} />
+                        ) : (
+                            "Sign In"
+                        )}
                     </button>
-
                     <p className="text-xs text-center mt-6 ">  have an Account? <Link className="text-[#938E07]" to={"/auth/register"}>Sign up</Link> no for one!</p>
 
                 </form>

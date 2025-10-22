@@ -25,10 +25,10 @@ export default function GroupedBarChart3({
         { key: "seriesD", label: "Series D", color: "#699635" },
     ],
     height = 180,
-    yLabel = "Value",
+    // yLabel = "Value",
     barSize = 18,
     radius = [6, 6, 0, 0], // why: subtle rounded tops improve readability
-    tooltipFormatter,
+    tooltipFormatter = ((value, name) => [value, name]),
     grid = true,
 }) {
     const safeData = Array.isArray(data) && data.length
@@ -41,7 +41,7 @@ export default function GroupedBarChart3({
             { [xKey]: "Week 5", seriesA: 30, seriesB: 24, seriesC: 19, seriesD: 5 },
         ];
 
-    const formatter = tooltipFormatter || ((value, name) => [value, name]);
+    const formatter = tooltipFormatter
 
     return (
         <div className="w-full mt-6 ">
