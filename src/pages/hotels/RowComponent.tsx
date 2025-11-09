@@ -3,8 +3,9 @@ import { MoreVertical } from 'lucide-react';
 import { AppDispatch } from "../../store";
 // Assuming Hotel type and deleteHotel thunk are correctly typed in hotelSlice
 import { deleteHotel, } from "../../store/slice/hotelSlice";
-import { Hotel } from "../../utils/hotelTypes";
+import { Hotel } from "../../utils/types/hotelTypes";
 import { useNavigate } from "react-router-dom";
+import { uiRoute } from "../../utils/utils";
 
 
 interface HotelRowProps {
@@ -78,9 +79,14 @@ const HotelRow: React.FC<HotelRowProps> = ({ hotel, dispatch }) => {
         setIsOpen(false);
     };
 
+    const handleRowClick = () => {
+        navigate(`/hotels/${hotel.id}`);
+    };
     return (
-        <tr className="border-b border-gray-200 hover:bg-gray-50 transition duration-150">
-            <td className="p-2 ">
+        <tr
+            className="border-b border-gray-200 hover:bg-gray-50 transition duration-150 cursor-pointer"
+            onClick={handleRowClick}
+        >            <td className="p-2 ">
                 <img
                     src={hotel.cover_image.secure_url}
                     alt={hotel.name}
@@ -115,7 +121,7 @@ const HotelRow: React.FC<HotelRowProps> = ({ hotel, dispatch }) => {
                         role="menu"
                     >
                         <button
-                            onClick={() => navigate(`/hotels/${hotel.id}/rooms/create`)}
+                            onClick={(e) => { e.stopPropagation(); navigate(uiRoute.createHotelRooms.route(hotel.id)) }}
                             className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700"
                             role="menuitem"
                         >
@@ -126,14 +132,14 @@ const HotelRow: React.FC<HotelRowProps> = ({ hotel, dispatch }) => {
                             </span>Create Room
                         </button>
                         <button
-                            onClick={() => handleEdit(hotel.id)}
+                            onClick={(e) => { e.stopPropagation(); handleEdit(hotel.id) }}
                             className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700"
                             role="menuitem"
                         >
                             <span className="mr-2">✏️</span> Edit
                         </button>
                         <button
-                            onClick={() => handleDelete(hotel.id)}
+                            onClick={(e) => { e.stopPropagation(); handleDelete(hotel.id) }}
                             className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
                             role="menuitem"
                         >

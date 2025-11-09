@@ -10,7 +10,7 @@ import {
 import {
     Hotel,
     AddHotelPayload,
-} from "../../utils/hotelTypes";
+} from "../../utils/types/hotelTypes";
 import DashboardCard from "../../components/dashboardCard";
 import FileUpload from "../../components/fileUpload";
 import FacilitiesSelect from "../../components/properties/propertyFacilitySecetion";

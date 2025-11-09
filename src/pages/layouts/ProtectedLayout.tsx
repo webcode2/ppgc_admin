@@ -82,9 +82,9 @@ export function ProtectedScreen() {
 
 
     return (
-        <div className="h-screen flex overflow-hidden">
+        <div className=" flex overflow-hidden">
             {/* Sidebar */}
-            <aside className=" bg-white h-screen">
+            <aside className=" bg- h-screen ">
                 <div className="header  bg-[#3a0a0a] py-2 flex justify-center">
                     <img src="logo/logo.png" alt="" className="mr-10" srcSet="logo/logo.png 1x, logo/logo@2x.png 2x" />
 

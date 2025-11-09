@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom"
-import { Property } from "../../utils/propertiesType"
+import { Property } from "../../utils/types/propertiesType"
 
 function PropertyListTable({ data }) {
     const navigate = useNavigate()

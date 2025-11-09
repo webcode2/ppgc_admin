@@ -2,16 +2,17 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginAccount, registerAccount } from "../../store/slice/authSlice";
 import { useNavigate } from "react-router-dom";
-import RightBG from "../../components/auth/RightBG";    
+import RightBG from "../../components/auth/RightBG";
 import TokenInput from "../../components/auth/verifyWithToken";
-import { uiRoute } from "../../utils/utils";
 import { CircleCheckBig } from "lucide-react";
+import { RootState } from "../../store";
+import { uiRoute } from "../../utils/utils";
 
 export default function TokenVerifyScreenSuccess() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { isAuthenticated, preAuth } = useSelector((state) => state.auth);
+    const { isAuthenticated, preAuth } = useSelector((state: RootState) => state.auth);
 
 
 
@@ -20,7 +21,7 @@ export default function TokenVerifyScreenSuccess() {
     // Navigate when authenticated
     useEffect(() => {
         if (isAuthenticated) {
-            navigate(uiRoute.home);
+            navigate(uiRoute.home.route);
         }
     }, [isAuthenticated, navigate]);
 

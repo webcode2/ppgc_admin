@@ -4,10 +4,11 @@ import FileUpload from "../../components/fileUpload";
 import FacilitiesSelect from "../../components/properties/propertyFacilitySecetion";
 import { useDispatch } from "react-redux";
 import { OutlineButton, SolidButton } from "../../components/buttons";
+import { AppDispatch } from "../../store";
 
 
 function NewBooking() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
 
   const [booking, setBooking] = useState({ facilities: [] });
@@ -71,7 +72,7 @@ function NewBooking() {
                 </label>
                 <textarea
                   name="description"
-                  rows="6"
+                  rows={6}
                   placeholder="add description"
                   onChange={(e) => setBooking({ ...booking, [e.target.name]: e.target.value })}
                   className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
@@ -117,26 +118,26 @@ function NewBooking() {
         </div>
 
         {/* Cell 2 */}
-        <div className=" h-full">
+        {/* <div className=" h-full">
           <DashboardCard title="Add Photos" showHeader className="p-5" showDropDown={false}>
             <div className="mt-2">
               <FileUpload
                 onDropFile={(files) => {
                   console.log('Uploaded files:', files);
-                  booking.photos = files;
+                  booking. = files;
                   // TODO: handle upload to server / cloud storage
                 }}
               />
             </div>
           </DashboardCard >
-        </div>
+        </div> */}
 
 
         {/* Cell 3 */}
         <div className="    h-full ">
           <DashboardCard title="Main Facilities" className="" showDropDown={false}>
             <div className="mt-10">
-              <FacilitiesSelect selected={booking.facilities} onChange={setSelectedFacilities} />
+              <FacilitiesSelect property_type="room" selected={booking.facilities} onChange={setSelectedFacilities} />
             </div>
           </DashboardCard >
         </div>

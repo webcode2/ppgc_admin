@@ -9,7 +9,7 @@ import { fetchPropertyById, updateProperty } from "../../store/slice/propertySli
 import Loading from "../../components/loading";
 import { OutlineButton, SolidButton } from "../../components/buttons";
 import { Save, ArrowLeft } from "lucide-react";
-import { PropertyPayload, PropertyImage, Area } from "../../utils/propertiesType";
+import { PropertyPayload, PropertyImage, Area } from "../../utils/types/propertiesType";
 
 const UpdatePropertyScreen = () => {
     const { property_id } = useParams();

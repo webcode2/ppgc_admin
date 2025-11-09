@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createProperty } from "../../store/slice/propertySlice";
 import { OutlineButton, SolidButton } from "../../components/buttons";
 import { ArrowLeft, ArrowRight, Save } from "lucide-react";
-import { Area, Errors, PropertyImage, PropertyPayload } from "../../utils/propertiesType";
+import { Area, Errors, PropertyImage, PropertyPayload } from "../../utils/types/propertiesType";
 import { AppDispatch, RootState } from "../../store";
 
 const PropertyWizard = () => {

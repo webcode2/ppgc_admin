@@ -21,7 +21,7 @@ const ALL_FACILITIES: Record<string, string[]> = {
     ],
     'apartment': ['Kitchen', 'Gym', 'Wi-Fi'],
     'landed_property': ['Fence'],
-    'room': ["Ac"],
+    'room': ["Ac", "Wi-Fi", "TV",],
     // Add other property types and their facilities here as needed
 };
 

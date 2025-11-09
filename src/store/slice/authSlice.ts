@@ -9,14 +9,14 @@ import { jwtDecode } from "jwt-decode";
 // Thunk to fetch data from API
 export const loginAccount = createAsyncThunk(
     'auth/loginAccount',
-    async (data: { email: string, password: string }, { rejectWithValue }) => {
-        console.log(data)
+    async (payload: { email: string, password: string }, { rejectWithValue }) => {
+    // console.log(data)
         try {
-            const user = await axios.post(`${API_SERVER_BASE_URL}/auth/signin`, data, {
+            const { data } = await axios.post(`${API_SERVER_BASE_URL}/auth/signin`, payload, {
                 headers: { "Content-Type": "application/json" }
             })
-            console.log(user)
-            return user.status === 200 ? user.data : rejectWithValue("something Went wrong")
+            console.log(data)
+            return data?.access_token ? data : rejectWithValue("something Went wrong")
         } catch (err) {
             console.log(err);
             return rejectWithValue(err.response.data);
@@ -164,6 +164,7 @@ const authSlice = createSlice({
             })
             .addCase(loginAccount.fulfilled, (state, action: PayloadAction<User>) => {
                 const decoded: any = jwtDecode(action.payload.access_token);
+                console.log(decoded)
                 const jwtSub = decoded?.sub || "";
 
                 const user: User = {
@@ -194,7 +195,7 @@ const authSlice = createSlice({
                 state.isLoading = true;
                 state.error = null;
             })
-            .addCase(checkIfAuthenticated.fulfilled, (state, action) => {
+            .addCase(checkIfAuthenticated.fulfilled, (state, action: PayloadAction<User>) => {
                 const user: User = {
                     jwtSub: action.payload.jwtSub,
                     bio: action.payload.bio || null,
@@ -218,6 +219,8 @@ const authSlice = createSlice({
                     action.error?.message ||
                     "Authentication check failed";
             })
+
+
             //  For Registration
             .addCase(preRegisterAccount.pending, (state) => {
                 state.isLoading = true

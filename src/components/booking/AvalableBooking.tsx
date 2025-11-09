@@ -1,9 +1,10 @@
 import React from 'react';
 import { Calendar, User, DoorClosed } from 'lucide-react';
 import { NumericFormat } from "react-number-format";
+import { Booking } from "../../utils/types/bookingTypes";
 
 
-export default function AvailableBookingTable({ data = [] }) {
+export default function AvailableBookingTable({ data = [] }: { data: Booking[] }) {
     return (
         <div className="overflow-x-auto w-full mt-10">
 
@@ -28,11 +29,11 @@ export default function AvailableBookingTable({ data = [] }) {
                         >
 
                             <td className="py-4 px-4   space-x-2">
-                                <span>Room {avail?.roomNo}, kings hotel</span>
+                                <span>Room {avail?.room_id}, kings hotel</span>
                             </td>
                             <td className="py-4 px-4 space-x-2">
                                 <NumericFormat
-                                    value={avail?.price}
+                                    value={avail?.price_per_night}
                                     displayType="text"
                                     thousandSeparator
                                     prefix="₦"

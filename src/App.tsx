@@ -15,7 +15,6 @@ import { uiRoute } from "./utils/utils";
 import TokenVerifyScreen from "./pages/auth/TokenScreen";
 import TokenVerifyScreenSuccess from "./pages/auth/successScreen";
 import Booking from "./pages/bookings/BookingPage";
-import NewBooking from "./pages/bookings/NewBooking";
 import PropertyWizard from "./pages/proerties/newProperty";
 import UpdatePropertyScreen from "./pages/proerties/updateProperty";
 import InvestmentScreen from "./pages/investment/ListAllIvestment";
@@ -29,6 +28,10 @@ import EditHotel from "./pages/hotels/updateHotel";
 import NewRoom from "./pages/hotels/addHotelRoom";
 import PropertyScreen from "./pages/proerties/PropertyScreen";
 import { ProtectedScreen } from "./pages/layouts/ProtectedLayout";
+import HotelReceptionPage from "./pages/hotels/signleHotel";
+import NewBooking from "./pages/bookings/NewBooking";
+import HotelRoomManagementPage from "./pages/hotels/rooms";
+import RoomBookingPage from "./pages/bookings/roomBookingPage";
 
 
 
@@ -44,16 +47,25 @@ let router = createBrowserRouter([
       // Main App
 
       { index: true, Component: DashBoardIndex },
-      // Hotels
+
+
+      //_____________________ Hotels______________________
       { path: "/hotels", Component: Hotel },
       { path: "hotels/new", Component: NewHotel },
+
+      { path: uiRoute.hotelDetails.pattern, Component: HotelReceptionPage },
       { path: "hotels/:hotel_id/edit", Component: EditHotel },
 
-      { path: "hotels/:hotel_id/rooms/create", Component: NewRoom },
+      { path: uiRoute.createHotelRooms.pattern, Component: NewRoom },
+      { path: uiRoute.updateHotelRoom.pattern, Component: NewRoom },
+      { path: uiRoute.hotelRooms.pattern, Component: HotelRoomManagementPage },
+
+      // Booking routes
+      { path: uiRoute.bookings.pattern, Component: Booking },
+      { path: uiRoute.newBooking.pattern, Component: RoomBookingPage },
+      // { path: "bookings/new-room", Component: NewBooking },
 
 
-      { path: "bookings", Component: Booking },
-      { path: "bookings/new-room", Component: NewBooking },
 
       // properties
       { path: "properties", Component: PropertyScreen },
@@ -84,12 +96,13 @@ let router = createBrowserRouter([
     path: "/auth/", Component: Outlet,
     children: [
       { index: true, element: <Navigate to="login" replace /> },
-      { path: "login", Component: Login },
-      { path: "register", Component: Register },
-      { path: "forget-password", Component: ResetPassword },
+      { path: uiRoute.login.pattern, Component: Login },
+      { path: uiRoute.register.pattern, Component: Register },
+      { path: uiRoute.resetPassword.pattern, Component: ResetPassword },
 
-      { path: uiRoute.verifyEmail.route.trim(), Component: TokenVerifyScreen },
-      { path: uiRoute.authSuccess.appRoute, Component: TokenVerifyScreenSuccess },
+
+      { path: uiRoute.verifyEmail.pattern, Component: TokenVerifyScreen },
+      { path: uiRoute.authSuccess.pattern, Component: TokenVerifyScreenSuccess },
     ],
   },
   // Page not found Error 

@@ -4,7 +4,7 @@ import FileUpload from "../../components/fileUpload";
 import { useDispatch } from "react-redux";
 import { OutlineButton, SolidButton } from "../../components/buttons";
 import { addHotel } from "../../store/slice/hotelSlice";
-import { AddHotelPayload, Hotel } from "../../utils/hotelTypes"
+import { AddHotelPayload, Hotel } from "../../utils/types/hotelTypes"
 import { AppDispatch } from "../../store";
 
 

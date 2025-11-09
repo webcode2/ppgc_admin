@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import apiClient from "../../utils/axiosConfig";
-import { ApiError, Property, PropertyPayload, UpdatePropertyPayload } from "../../utils/propertiesType";
+import { ApiError, Property, PropertyPayload, UpdatePropertyPayload } from "../../utils/types/propertiesType";
 
 
 
