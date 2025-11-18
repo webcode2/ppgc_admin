@@ -10,7 +10,7 @@ function Header() {
 
     return (
         <header className="sticky top-0 left-0 w-full bg-[#3a0a0a] shadow z-50 ">
-            <div className="flex items-center  md:px-20 px-5 py-3 ">
+            <div className="flex items-center  md:px-20 px-5 h-16">
                 <SearchComponent onSearch={() => { }} placeholder="search" />
 
                 <nav className="hidden md:flex gap-2 text-sm ml-auto lg:flex justify-center items-center ">

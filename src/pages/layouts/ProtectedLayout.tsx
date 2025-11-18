@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 // import Header from "../../components/Header";
 // import Footer from "../../components/footer";
 import { Bounce, ToastContainer } from "react-toastify";
@@ -38,11 +38,18 @@ export function ProtectedScreen() {
     const dispatch = useDispatch<AppDispatch>()
 
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const { isAuthenticated, isLoading } = useSelector((state: RootState) => state.auth);
-    const mainRef = useRef<HTMLDivElement>(null);
+    const { isAuthenticated, isLoading, isBootstrapped } = useSelector((state: RootState) => state.auth);
+    const mainContentRef = useRef<HTMLDivElement>(null);
 
-
+    useEffect(() => {
+        // Scroll to top and set focus on route change
+        if (mainContentRef.current) {
+            mainContentRef.current.scrollTo(0, 0);
+            mainContentRef.current.focus();
+        }
+    }, [location.pathname]);
 
     useEffect(() => {
         const verifyAuth = async () => {
@@ -52,23 +59,21 @@ export function ProtectedScreen() {
         return () => { }
     }, [dispatch]);
 
+    // ⏳ WAIT until we know the auth state
+    if (!isBootstrapped) {
+        return <Loading />;  // spinner
+    }
 
-    useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
-            const redirectTo = encodeURIComponent(location.pathname + location.search);
+    if (!isAuthenticated) {
+        const redirectTo = encodeURIComponent(
+            location.pathname + location.search
+        );
 
-            navigate(`/auth/login?redirect=${redirectTo}`, { replace: true });
-        }
-    }, [isLoading, isAuthenticated, navigate]);
+        return (
+            <Navigate to={`/auth/login?redirect=${redirectTo}`} replace />
+        );
+    }
 
-
-
-    useEffect(() => {
-        // Automatically focus the scrollable main container after load
-        if (mainRef.current) {
-            mainRef.current.focus();
-        }
-    }, []);
 
 
 
@@ -82,24 +87,21 @@ export function ProtectedScreen() {
 
 
     return (
-        <div className=" flex overflow-hidden">
+        <div className=" h-screen flex overflow-hidden">
             {/* Sidebar */}
-            <aside className=" bg- h-screen ">
-                <div className="header  bg-[#3a0a0a] py-2 flex justify-center">
-                    <img src="logo/logo.png" alt="" className="mr-10" srcSet="logo/logo.png 1x, logo/logo@2x.png 2x" />
 
-                </div>
                 <Sidebar navlist={navItems}  />
-            </aside>
+
 
             {/* Main Area */}
-            <div className="flex flex-col flex-1">
+            <div ref={mainContentRef}
+                tabIndex={-1}
+                id="main-content" // <-- Required to make focus() work
+                className="flex flex-col flex-1 overflow-y-auto focus:outline-none">
                 <Header />
 
                 <main
-                    ref={mainRef}
-                    tabIndex={-1}  // <-- Required to make focus() work
-                    className="flex-1 overflow-y-auto focus:outline-none bg-gray-50 p-6"
+                    className="flex-1  focus:outline-none bg-gray-50 p-6"
                 >
                     <Outlet />
                 </main>
@@ -121,5 +123,3 @@ export function ProtectedScreen() {
         </div>
     );
 }
-
-

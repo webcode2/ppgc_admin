@@ -119,6 +119,7 @@ interface AuthState {
     status: Status;
     isAuthenticated: boolean;
     preAuth: PreAuthState;
+    isBootstrapped: boolean
     user: User | null;
     isLoading: boolean;
     error: string | null;
@@ -127,6 +128,7 @@ interface AuthState {
 const initialState: AuthState = {
     status: "idle",
     isAuthenticated: false,
+    isBootstrapped: false,
     preAuth: {
         authStep: 0,
         authName: "",
@@ -194,6 +196,7 @@ const authSlice = createSlice({
             .addCase(checkIfAuthenticated.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
+
             })
             .addCase(checkIfAuthenticated.fulfilled, (state, action: PayloadAction<User>) => {
                 const user: User = {
@@ -211,13 +214,13 @@ const authSlice = createSlice({
                 state.isAuthenticated = true;
                 state.isLoading = false;
                 state.status = "succeeded";
+                state.isBootstrapped = true;
+                saveToLocalStorage("userDetails", user);
             })
             .addCase(checkIfAuthenticated.rejected, (state, action) => {
                 state.isLoading = false;
-                state.error =
-                    (action.payload as string) ||
-                    action.error?.message ||
-                    "Authentication check failed";
+                state.error = (action.payload as string) || action.error?.message || "Authentication check failed";
+                state.isBootstrapped = true;
             })
 
 

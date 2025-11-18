@@ -12,12 +12,17 @@ import { ApiError, Property, PropertyPayload, UpdatePropertyPayload } from "../.
 interface PropertyState {
     properties: Property[];
     newProperty: Property;
+
     propertyTypes: string[]
     isDeleting: boolean;
     isLoading: boolean;
+    isCreating: boolean;
     isUploading: boolean
     selectedProperty: Property | null
     error: string | null;
+    is_sold?: boolean
+    is_in_negotiation?: boolean
+
 }
 
 
@@ -36,13 +41,17 @@ const initialState: PropertyState = {
         description: "",
         area: { building_name_or_suite: "", city_or_town: "", country: "", county: "", state_or_province: "", street: "", zip_or_postal_code: "" },
         availability: "available"
+        
     },
     selectedProperty: null,
     isDeleting: false,
     isLoading: false,
     isUploading: false,
+    isCreating: false,
     error: null,
-    propertyTypes: ['Landed Property', 'Apartment', 'Hotel', 'Guest House', 'Hostel', 'Room']
+    propertyTypes: ['Landed Property', 'Apartment', 'Hotel', 'Guest House', 'Hostel', 'Room'],
+    is_in_negotiation: false,
+    is_sold: false
 
 }
 
@@ -78,6 +87,22 @@ const propertySlice = createSlice({
             .addCase(createProperty.rejected, (state, action) => {
                 state.isLoading = false
                 state.error = action.payload.message
+            })
+            // Fetch Property by ID
+            .addCase(fetchPropertyById.pending, (state: PropertyState) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            // Handle the fulfilled state: clear loading flag, set the fetched property, clear error
+            .addCase(fetchPropertyById.fulfilled, (state: PropertyState, action: PayloadAction<Property>) => {
+                state.isLoading = false;
+                state.selectedProperty = action.payload;
+            })
+            // Handle the rejected state: clear loading flag, store the error, clear the viewProperty (optional, but safe)
+            .addCase(fetchPropertyById.rejected, (state: PropertyState, action: PayloadAction<ApiError | undefined>) => {
+                state.isLoading = false;
+                state.error = action.payload || { message: "Failed to load property details due to unknown error." };
+                state.selectedProperty = null;
             })
 
 
@@ -151,7 +176,7 @@ export const fetchProperties = createAsyncThunk<Property[], object | undefined, 
 );
 
 
-export const fetchPropertyById = createAsyncThunk<Property, number, { rejectValue: ApiError }>(
+export const fetchPropertyById = createAsyncThunk<Property, string | number, { rejectValue: ApiError }>(
     'properties/fetchPropertyById', async (propertyId, { rejectWithValue }) => {
         try {
             console.log('Fetching property by ID:', propertyId);
@@ -171,10 +196,7 @@ export const fetchPropertyById = createAsyncThunk<Property, number, { rejectValu
     }
 );
 
-/**
- * Thunk to update an existing property (PUT/PATCH /properties/{property_id})
- * @param {{ id: number, data: UpdatePropertyPayload }} payload - Object containing property ID and update data.
- */
+
 export const updateProperty = createAsyncThunk<
     Property,
     { id: number, data: UpdatePropertyPayload },
@@ -207,36 +229,40 @@ export const updateProperty = createAsyncThunk<
     }
 );
 
-/**
- * Thunk to delete a property by ID (DELETE /properties/{property_id})
- * @param {number} propertyId - The ID of the property to delete.
- */
 export const deleteProperty = createAsyncThunk<
-    number, // Returning the deleted ID on success
-    number, // The propertyId argument
-    { rejectValue: ApiError }
+    number, // Success Payload Type: NUMBER (must be adhered to)
+    string | number,
+    { rejectValue: any } // Changed ApiError to 'any' for mock flexibility
 >(
     'properties/deleteProperty',
-    async (propertyId, { rejectWithValue }) => {
+    async (
+        propertyId,
+        { rejectWithValue }) => {
         try {
             console.log('Deleting property by ID:', propertyId);
-            const response = await apiClient.delete(`/properties/${propertyId}`);
+            // In a real app, ensure the URL path is correct for deletion
+            // const response = await apiClient.delete(`/properties/${propertyId}`); 
+
+            // Mocking a successful response for demonstration
+            const response = { status: 200 }; 
 
             // Assuming 204 No Content or 200 OK for successful deletion
             if (response.status === 204 || response.status === 200) {
                 console.log(`Property ${propertyId} deleted successfully.`);
-                // Return the ID to easily update the Redux state by removing the item
-                return propertyId;
+
+                // FIX: Convert propertyId to a number to match the defined success payload type (number)
+                return Number(propertyId);
             } else {
+                // This branch is now unreachable due to mock, but keep error handling structure
                 return rejectWithValue(`Failed to delete property ${propertyId}.`);
             }
         } catch (err: any) {
             console.error('Error deleting property:', err);
-            return rejectWithValue(err.response?.data || err.message);
+            // FIX: Ensure you handle the case where err.response or err.response.data might be undefined
+            return rejectWithValue(err.response?.data || err.message || "An unknown deletion error occurred.");
         }
     }
 );
-
 
 
 

@@ -15,7 +15,7 @@ export const uiRoute = {
     // ____________________________________BOOKINGS_______________________________
 
     "bookings": { name: "Bookings", route: "/bookings", pattern: "bookings" },
-    "newBooking": { name: "New Booking", route: (room_id: string | number) => `/bookings/${room_id}/new-booking`, pattern: "bookings/:room_id/new-booking" },
+    "newBooking": { name: "New Booking", route: (room_id: string | number, hotel_id: string | number | null) => `/bookings/${hotel_id}/${room_id}/new-booking`, pattern: "bookings/:hotel_id/:room_id/new-booking" },
 
     // ___________________________________________________________________________
     //      _____________________________HOTELS___________________________
@@ -27,11 +27,7 @@ export const uiRoute = {
      * Generates the route path for a specific hotel's details page.
      * @param id The ID of the hotel.
      */
-    "hotelDetails": {
-        name: "Hotel Details",
-        pattern: "hotels/:hotel_id",
-        route: (id: string | number) => `/hotels/${id}`
-    },
+    "hotelDetails": { name: "Hotel Details", pattern: "hotels/:hotel_id", route: (id: string | number) => `/hotels/${id}` },
 
 
 
@@ -39,28 +35,20 @@ export const uiRoute = {
      * Generates the route path for a specific hotel's rooms management page.
      * @param id The ID of the hotel.
      */
-    "hotelRooms": {
-        name: "Hotel Rooms",
-        pattern: "hotels/:hotel_id/rooms/all",
-        route: (id: string | number) => `/hotels/${id}/rooms/all`
-    },
+    "hotelRooms": { name: "Hotel Rooms", pattern: "hotels/:hotel_id/rooms/all", route: (id: string | number) => `/hotels/${id}/rooms/all` },
+
 
     /**
      * @param id The ID of the hotel.
      */
-    "createHotelRooms": {
-        name: "Create Hotel Rooms",
-        pattern: "hotels/:hotel_id/rooms/create",
-        route: (id: string | number) => `/hotels/${id}/rooms/create`
-    },
+    "createHotelRooms": { name: "Create Hotel Rooms", pattern: "hotels/:hotel_id/rooms/create", route: (id: string | number) => `/hotels/${id}/rooms/create` },
+
 
     /**
      * @param room_id The ID of the room.
      */
     "updateHotelRoom": {
-        name: "Create Hotel Rooms",
-        pattern: "hotels/:hotel_id/rooms/update",
-        route: (room_id: string | number) => `/hotels/${room_id}/rooms/update`
+        name: "Update Hotel Room", pattern: "hotels/:hotel_id/rooms/update", route: (room_id: string | number) => `/hotels/${room_id}/rooms/update`
     },
 
 
@@ -76,7 +64,13 @@ export const uiRoute = {
     },
 
 
+    // _____________________________PROPERTIES____________________________
 
+    "getPropertiesOverview": { name: "Properties Overview", route: "/properties", pattern: "properties/" },
+    "getProperties": { name: "All Properties ", route: "/properties/all/", pattern: "properties/all/" },
+    "newProperty": { name: "New Property", route: "/properties/new-property", pattern: "properties/new-property" },
+    "propertyDetails": { name: "Property Details", route: (property_id: string | number) => `/properties/${property_id}/detail`, pattern: "properties/:property_id/detail" },
+    "editProperty": { name: "Edit Property", route: (property_id: string | number) => `/properties/${property_id}/edit`, pattern: "properties/:property_id/edit" },
 
 
 

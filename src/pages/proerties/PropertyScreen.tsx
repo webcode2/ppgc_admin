@@ -17,24 +17,19 @@ function PropertyScreen() {
 
 
     useEffect(() => {
-
         dispatch(fetchProperties())
     }, [])
 
 
-
-
-
-
-
-    console.log(properties)
-
+// once properties is fetch 
 
     return (
         <div className="space-y-6 ">
-            <DashboardCard title="Properties Listed" showDropDown={false} extraView={properties.length > 3 ? true : false}>
+            <DashboardCard title="Properties Listed" showDropDown={false} extraView={properties.length > 3 ? true : false} className="px-5">
                 <PropertyListTable data={properties} />
             </DashboardCard>
+
+
             <DashboardCard title="Booked Inspection" showDropDown={false} extraView>
                 <InspectionBookingTable data={inspectionData} />
             </DashboardCard>

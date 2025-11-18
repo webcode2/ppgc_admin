@@ -32,6 +32,7 @@ import HotelReceptionPage from "./pages/hotels/signleHotel";
 import NewBooking from "./pages/bookings/NewBooking";
 import HotelRoomManagementPage from "./pages/hotels/rooms";
 import RoomBookingPage from "./pages/bookings/roomBookingPage";
+import PropertyDetailPage from "./pages/proerties/singleProperty";
 
 
 
@@ -71,6 +72,7 @@ let router = createBrowserRouter([
       { path: "properties", Component: PropertyScreen },
       { path: "properties/new-property", Component: PropertyWizard },
       { path: "properties/:property_id/edit", Component: UpdatePropertyScreen },
+      { path: uiRoute.propertyDetails.pattern, Component: PropertyDetailPage },
 
 
       // Invevstment

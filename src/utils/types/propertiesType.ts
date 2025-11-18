@@ -34,6 +34,7 @@ export interface Area {
     building_name_or_suite: string;
 }
 
+
 export interface Property {
     id?: string;
     type: string;
@@ -45,6 +46,12 @@ export interface Property {
     price: number;
     description: string;
     availability: "available" | "unavailable" | "";
+    is_sold?: boolean;
+    is_in_negotiation?: boolean;
+    client_name?: string
+    client_contact?: string
+    sold_price?: number
+
 
 }
 

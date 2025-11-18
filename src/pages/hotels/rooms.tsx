@@ -127,7 +127,7 @@ const DropdownMenu = ({ menuItems }: any) => {
 // --- MAIN PAGE COMPONENT ---
 
 export default function HotelRoomManagementPage() {
-    const { hotel_id } = useParams();
+    const { hotel_id } = useParams() 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
@@ -453,7 +453,7 @@ export default function HotelRoomManagementPage() {
                                                     // Dynamic Operational Actions
                                                     ...(room.isAvailable || room.isBooked || room.isReserved ? [
                                                         { label: "Check-in Guest", icon: DoorOpen, action: () => openActionModal('book', room), disabled: room.isOccupied, className: room.isBooked ? 'text-blue-600 font-semibold' : '' },
-                                                        { label: "Book/Reserve Now", icon: CalendarCheck, action: () => navigate(uiRoute.newBooking.route(room.id)), disabled: room.isOccupied },
+                                                        { label: "Book/Reserve Now", icon: CalendarCheck, action: () => navigate(uiRoute.newBooking.route(room.id, hotel_id ?? "default-hotel-id")), disabled: room.isOccupied },
                                                     ] : []),
 
                                                     ...(room.isOccupied ? [

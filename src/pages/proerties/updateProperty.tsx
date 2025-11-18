@@ -116,7 +116,7 @@ const UpdatePropertyScreen = () => {
 
     const handleSave = async () => {
         await dispatch(updateProperty({ id: Number(property_id), data: formData })).unwrap();
-        navigate("/dashboard/properties");
+        navigate("/properties");
     };
 
     const areaFieldsOrder: (keyof Area)[] = [

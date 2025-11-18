@@ -111,14 +111,20 @@ export default function RoomBookingPage() {
             if (viewBooking.status === 'checked_in') setPageMode('checkout');
         } else if (!isEditingExistingBooking && room_id&&selectedRoom) {
             setBookingForm(
-                {...initailFormState,}
+                {
+                    ...initialFormState,
+                    price_per_night: selectedRoom.price_per_night,
+                    total_amount: selectedRoom.price_per_night,
+                    total_number_of_days: 1,
+
+                }
             );
 
 
         } else if (!isEditingExistingBooking) {
             setBookingForm(initialFormState);
         }
-    }, [viewBooking, isEditingExistingBooking, booking_id]);
+    }, [viewBooking, isEditingExistingBooking, selectedRoom, booking_id]);
 
 
     // --- CALCULATED VALUES ---
@@ -205,7 +211,7 @@ export default function RoomBookingPage() {
     // --- RENDER HELPERS ---
 
     const pageTitle = useMemo(() => {
-        const roomRef = `Room ${room_id} @ Hotel ${hotel_id}`;
+        const roomRef = `Room ${room_id} @ Hotel ${hotel_id }`;
         if (viewBooking) {
             switch (pageMode) {
                 case 'create_booking': return `Create New Booking for ${roomRef}`;
