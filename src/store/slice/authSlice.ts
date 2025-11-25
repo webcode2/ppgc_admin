@@ -12,7 +12,7 @@ export const loginAccount = createAsyncThunk(
     async (payload: { email: string, password: string }, { rejectWithValue }) => {
     // console.log(data)
         try {
-            const { data } = await axios.post(`${API_SERVER_BASE_URL}/auth/signin`, payload, {
+            const { data } = await axios.post(`${API_SERVER_BASE_URL}/auth/signin/`, payload, {
                 headers: { "Content-Type": "application/json" }
             })
             console.log(data)
