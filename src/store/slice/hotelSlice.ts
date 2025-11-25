@@ -212,7 +212,7 @@ export const getHotelWithRoomsById = createAsyncThunk<ReadHotelWithRooms, string
         const transformRoomResponse = (raw: ReadRoomFull): ReadRoom => ({
             id: raw.id,
             room_type: raw.room_type,
-            number: raw.number,
+            number: raw.room_number,
             status: raw.status,
             price_per_night: raw.price_per_night,
             current_bookins: null, // no booking data in the payload
@@ -306,7 +306,7 @@ const initialState: HotelState = {
         bed_count: 0,
         cover_image: { public_id: "", secure_url: "" },
         other_images: [],
-        number: "",
+        room_number: "",
     },
 
     rooms: [

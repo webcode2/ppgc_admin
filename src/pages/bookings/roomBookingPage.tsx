@@ -48,7 +48,7 @@ const initialFormState: BookingForm = {
     guest_name: "", phone: "", email: "", notes: "", paid_amount: 0, price_per_night: 0,
     check_in: dateToISOString(new Date()),
     check_out: dateToISOString(new Date(new Date().setDate(new Date().getDate() + 1))),
-    ballance_payment: 0, status: "booked", total_amount: 0, total_number_of_days: 0
+    balance_payment: 0, status: "booked", total_amount: 0, total_number_of_days: 0
 };
 
 export default function RoomBookingPage() {
@@ -95,7 +95,7 @@ export default function RoomBookingPage() {
     useEffect(() => {
         if (isEditingExistingBooking && viewBooking && viewBooking.id === booking_id) {
             setBookingForm({
-                ballance_payment: viewBooking.ballance_payment, status: "booked"
+                balance_payment: viewBooking.balance_payment, status: "booked"
                 , total_amount: viewBooking.total_amount,
                 total_number_of_days: viewBooking.total_number_of_days,
                 guest_name: viewBooking.guest_name,
@@ -109,7 +109,7 @@ export default function RoomBookingPage() {
             });
             // Auto-set mode based on status if needed, or keep to 'edit'
             if (viewBooking.status === 'checked_in') setPageMode('checkout');
-        } else if (!isEditingExistingBooking && room_id&&selectedRoom) {
+        } else if (!isEditingExistingBooking && room_id && selectedRoom) {
             setBookingForm(
                 {
                     ...initialFormState,
@@ -160,7 +160,7 @@ export default function RoomBookingPage() {
         switch (mode) {
             case 'create_booking':
                 payload.status = 'booked';
-                action = addBooking({ data: payload });
+                action = dispatch(addBooking({ data: payload }));
                 successMessage = "Booking created successfully!";
                 break;
             case 'edit_booking':
@@ -172,7 +172,7 @@ export default function RoomBookingPage() {
                     // Calculate derived fields and explicitly include them
                     total_number_of_days: nights,
                     total_amount: estimatedTotal,
-                    ballance_payment: estimatedTotal - bookingForm.paid_amount,
+                    balance_payment: estimatedTotal - bookingForm.paid_amount,
                     status: viewBooking?.status || "booked", // Preserve current status unless explicitly changing it
                 };
 
@@ -211,7 +211,7 @@ export default function RoomBookingPage() {
     // --- RENDER HELPERS ---
 
     const pageTitle = useMemo(() => {
-        const roomRef = `Room ${room_id} @ Hotel ${hotel_id }`;
+        const roomRef = `Room ${room_id} @ Hotel ${hotel_id}`;
         if (viewBooking) {
             switch (pageMode) {
                 case 'create_booking': return `Create New Booking for ${roomRef}`;
@@ -349,19 +349,22 @@ export default function RoomBookingPage() {
 
                     {/* Column 1 & 2: Main Form */}
                     <div className="lg:col-span-2 space-y-6">
+
+
                         <h2 className="text-xl font-semibold text-gray-700 border-l-4 pl-3 border-gray-400">Guest Details</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="">
 
-                        <label className="block text-sm text-gray-600 font-medium">Guest Name <span className="text-red-500">*</span></label>
-                        <input
-                            name="guest_name"
-                            value={bookingForm.guest_name}
-                            onChange={updateBookingForm}
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-opacity-50 focus:ring-yellow-500"
-                            placeholder="Full name"
-                            readOnly={isReadOnly}
-                        />
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <label className="block text-sm text-gray-600 font-medium">Guest Name <span className="text-red-500">*</span></label>
+                                <input
+                                    name="guest_name"
+                                    value={bookingForm.guest_name}
+                                    onChange={updateBookingForm}
+                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-opacity-50 focus:ring-yellow-500"
+                                    placeholder="Full name"
+                                    readOnly={isReadOnly}
+                                />
+                            </div>
                             <div>
                                 <label className="block text-sm text-gray-600 font-medium">Phone</label>
                                 <input

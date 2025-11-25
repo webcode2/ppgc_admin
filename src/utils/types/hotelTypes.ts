@@ -54,7 +54,7 @@ export interface ReadCurrentBookin {
 // Defining the structure for hotel creation/update payload
 export interface Room {
     room_type: string;
-    number: string;                 // added for room identification
+    room_number: string;                 // added for room identification
     price_per_night: number;
     max_occupancy: number;
     bed_count: number;                   // renamed from number_of_beds

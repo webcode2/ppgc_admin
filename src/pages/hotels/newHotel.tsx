@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import DashboardCard from "../../components/dashboardCard";
 import FileUpload from "../../components/fileUpload";
 import { useDispatch } from "react-redux";
@@ -6,6 +6,8 @@ import { OutlineButton, SolidButton } from "../../components/buttons";
 import { addHotel } from "../../store/slice/hotelSlice";
 import { AddHotelPayload, Hotel } from "../../utils/types/hotelTypes"
 import { AppDispatch } from "../../store";
+import { uploadSignedImageTest } from "../../../signing";
+import { uploadUnsignedImage, useCloudinaryUploadHandler } from "../../utils/cloudinaryUpload"
 
 
 function NewHotel() {
@@ -33,9 +35,22 @@ function NewHotel() {
     });
 
 
+    // 💡 NEW: State hook to track progress for multiple files locally
+    const [uploadProgressMap, setUploadProgressMap] = useState<Map<string, number>>(new Map());
+
+    // 💡 Helper to update progress state safely and efficiently
+    const updateProgress = useCallback((fileId: string, percent: number) => {
+        setUploadProgressMap(prevMap => {
+            const newMap = new Map(prevMap);
+            newMap.set(fileId, percent);
+            return newMap;
+        });
+    }, []);
 
 
     const handleSave = () => {
+        // disable the save buton
+        // update the state to be loading 
         dispatch(addHotel(hotel))
     }
 
@@ -52,8 +67,9 @@ function NewHotel() {
     };
 
 
+
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-6 font-[Inter]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Hotel Details */}
                 <div className="md:row-span-2 h-full">
@@ -185,17 +201,13 @@ function NewHotel() {
                     <DashboardCard title="Cover Image" showDropDown={false}>
                         <div className="mt-2">
                             <FileUpload
-                                onDropFile={(files) => {
-                                    console.log("Cover image:", files[0]);
-                                    setHotel({
-                                        ...hotel,
-                                        cover_image: {
-                                            public_id: files[0].name,
-                                            secure_url: URL.createObjectURL(files[0]),
-                                        },
-                                    });
-                                }}
-
+                                onDropFile={useCloudinaryUploadHandler(
+                                    uploadUnsignedImage, // The specific upload utility function
+                                    "ppgc_properties",     // Destination folder
+                                    updateProgress,        // Your helper state setter for progress
+                                    setHotel,              // Your main hotel state setter
+                                    "cover_image"         // Specify the field to update
+                                )}
                             />
                             <p className="text-xs text-gray-500 mt-2 text-center">
                                 This image will be used as the main display for the hotel.
@@ -210,16 +222,74 @@ function NewHotel() {
                         <div className="mt-2">
                             <FileUpload
                                 multiple
-                                onDropFile={(files) => {
-                                    console.log("Other images:", files);
-                                    setHotel({
-                                        ...hotel,
-                                        other_images: files.map((f) => ({
-                                            public_id: f.name,
-                                            secure_url: URL.createObjectURL(f),
-                                        })),
-                                    });
-                                }}
+                                // onDropFile={async (files) => {
+                                //     console.log("Other images received:", files.length);
+
+                                //     // 1. Create an array of Promises, one for each upload.
+                                //     const uploadPromises = files.map(async (file) => {
+                                //         // Create a unique ID for this file's progress tracker
+                                //         const fileId = `${file.name}-${file.size}`;
+
+                                //         // Define the progress callback for this specific file
+                                //         const onProgressCallback = (percent: number) => {
+                                //             updateProgress(fileId, percent);
+                                //         };
+
+                                //         try {
+                                //             // Execute the UNSIGNED upload function, passing the progress callback
+                                //             const response = await uploadUnsignedImage(
+                                //                 file,
+                                //                 onProgressCallback, // 💡 Passing the callback here
+                                //                 null // No existing publicId to overwrite (it's a new upload)
+                                //             );
+
+                                //             // Once complete, set progress to 100% and return the structured data
+                                //             updateProgress(fileId, 100);
+
+
+                                //             console.log(uploadProgressMap)
+                                //             return {
+                                //                 public_id: response.public_id,
+                                //                 secure_url: response.secure_url,
+                                //             };
+                                //         } catch (error) {
+                                //             console.error(`Upload failed for ${file.name}:`, error);
+                                //             updateProgress(fileId, -1); // Indicate error state (e.g., -1)
+                                //             throw error; // Re-throw to stop Promise.all if a failure is critical
+                                //         }
+                                //     });
+
+                                //     // 2. Wait for ALL uploads to finish concurrently.
+                                //     try {
+                                //         const newUploadedImages = await Promise.all(uploadPromises);
+                                //         console.log("All uploads completed:", newUploadedImages);
+
+                                //         //
+
+                                //         // 3. Update the main hotel state with the new images.
+
+                                //         setHotel((prevHotel) => ({
+                                //             ...prevHotel,
+                                //             // Append the new images to the existing list
+                                //             other_images: [...(prevHotel.other_images || []), ...newUploadedImages],
+                                //         }));
+
+                                //         // 4. Clear the progress map after successful state update
+                                //         setUploadProgressMap(new Map());
+
+                                //     } catch (error) {
+                                //         // Handle global failure (e.g., show toast notification)
+                                //         console.error("One or more uploads failed.");
+                                //     }
+                                // }}
+
+                                onDropFile={useCloudinaryUploadHandler(
+                                    uploadUnsignedImage, // The specific upload utility function
+                                    "ppgc_properties",     // Destination folder
+                                    updateProgress,        // Your helper state setter for progress
+                                    setHotel,              // Your main hotel state setter
+                                    'other_images'         // Specify the field to update
+                                )}
                             />
                             <p className="text-xs text-gray-500 mt-2 text-center">
                                 These images will be displayed in the hotel gallery.

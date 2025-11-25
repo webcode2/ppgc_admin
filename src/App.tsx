@@ -33,6 +33,7 @@ import NewBooking from "./pages/bookings/NewBooking";
 import HotelRoomManagementPage from "./pages/hotels/rooms";
 import RoomBookingPage from "./pages/bookings/roomBookingPage";
 import PropertyDetailPage from "./pages/proerties/singleProperty";
+import RoomBookingPageNew from "./pages/bookings/searchAvail";
 
 
 
@@ -64,7 +65,7 @@ let router = createBrowserRouter([
       // Booking routes
       { path: uiRoute.bookings.pattern, Component: Booking },
       { path: uiRoute.newBooking.pattern, Component: RoomBookingPage },
-      // { path: "bookings/new-room", Component: NewBooking },
+      { path: "bookings/new-room-", Component: RoomBookingPageNew },
 
 
 

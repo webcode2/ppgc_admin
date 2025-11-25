@@ -39,11 +39,68 @@ const initialState: PropertyState = {
         title: "",
         type: "",
         description: "",
-        area: { building_name_or_suite: "", city_or_town: "", country: "", county: "", state_or_province: "", street: "", zip_or_postal_code: "" },
+        area: { building_name_or_suite: "", city_or_town: "", country: "", state_or_province: "", street: "", zip_or_postal_code: "" },
         availability: "available"
         
     },
-    selectedProperty: null,
+    selectedProperty: {
+        "id": "prop-54321",
+        "title": "Modern Loft with Skyline Views",
+        "type": "Condo / Loft",
+        "price": 1850000,
+        "sold_price": null,
+        "beds": 2,
+        "baths": 2.5,
+        "sqft": 1450,
+        "year_built": 2018,
+        "days_on_market": 42,
+        "last_assessed_value": 1500000,
+        "is_sold": false,
+        "is_in_negotiation": false,
+
+        "availability": "Immediate",
+        "description": "Welcome to the pinnacle of urban living. This stunning two-bedroom loft offers floor-to-ceiling windows with panoramic city views, an open-concept living space, and state-of-the-art smart home integration. The gourmet kitchen features Miele appliances and quartz countertops. Building amenities include a 24-hour concierge, rooftop terrace, and fitness center. Located steps from downtown's best dining and entertainment districts.",
+        "client_name": null,
+        "client_contact": null,
+
+        "area": {
+            "street": "123 Urban Blvd, Unit 2802",
+            "building_name_or_suite": "The Pinnacle Residences",
+            "city_or_town": "Willow Creek",
+            "state_or_province": "CA",
+            "zip_or_postal_code": "90210",
+            "country": "USA",
+
+        },
+        "features": [
+            "Floor-to-ceiling windows",
+            "Gourmet kitchen (Miele appliances)",
+            "Smart home integration",
+            "In-unit laundry",
+            "Private balcony",
+            "24/7 Concierge",
+            "Heated underground parking",
+            "Rooftop terrace access",
+            "Pet-friendly building"
+        ],
+        "cover_image": {
+            "secure_url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=875&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
+        "other_images": [
+            {
+                "secure_url": "https://plus.unsplash.com/premium_photo-1661915661139-5b6a4e4a6fcc?q=80&w=967&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            },
+            {
+                "secure_url": "https://images.unsplash.com/photo-1541123356213-bc0605658097?q=80&w=1934&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            },
+            {
+                "secure_url": "https://images.unsplash.com/photo-1563299796-cf9b0714b149?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            },
+            {
+                "secure_url": "https://images.unsplash.com/photo-1522080879683-1763a1523f66?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            }
+        ]
+    },
     isDeleting: false,
     isLoading: false,
     isUploading: false,

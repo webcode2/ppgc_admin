@@ -1,6 +1,6 @@
 // apiClient.ts
 import axios, { InternalAxiosRequestConfig } from "axios";
-import { API_SERVER_BASE_URL } from "./utils";
+import { API_SERVER_BASE_URL, uiRoute } from "./utils";
 
 const apiClient = axios.create({
     baseURL: API_SERVER_BASE_URL,
@@ -23,13 +23,17 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 });
 
 apiClient.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        console.log(response)
+        return response
+    },
     (error) => {
         if (error.response?.status === 401) {
             console.error("🚨 Unauthorized: clearing session...");
             localStorage.removeItem("userDetails");
-            window.location.href = "/login";
+            window.location.href = uiRoute.login.route;
         } else if (error.response?.status === 500) {
+            console.log(error)
             return Promise.reject({ message: "Ooop! My Bad, the server is currently unbale to respone now, Please check back soon our team are on it", status: 500 })
         }
         return Promise.reject(error);
@@ -37,3 +41,5 @@ apiClient.interceptors.response.use(
 );
 
 export default apiClient;
+
+

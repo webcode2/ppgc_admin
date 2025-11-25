@@ -1,5 +1,5 @@
-// export const API_SERVER_BASE_URL = `https://ppgc-fastapi-latest.onrender.com`
-export const API_SERVER_BASE_URL: string = `http://localhost:8000`
+export const API_SERVER_BASE_URL = `https://ppgc-fastapi-latest.onrender.com`
+// export const API_SERVER_BASE_URL: string = `http://localhost:8000`
 
 
 

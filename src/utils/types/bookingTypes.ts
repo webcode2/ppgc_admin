@@ -13,7 +13,7 @@ export interface Booking {
     hotel_id: string | number;
     total_number_of_days: number;
     total_amount: number;
-    ballance_payment: number;
+    balance_payment: number;
     status: BookingStatus
 }
 
@@ -50,6 +50,6 @@ export interface BookingForm extends FormBase {
 
     total_number_of_days: number | null;
     total_amount: number
-    ballance_payment: number
+    balance_payment: number
 
 }

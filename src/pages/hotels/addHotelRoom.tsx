@@ -19,7 +19,7 @@ const initialRoomState: Room = {
     bed_count: 0,
     cover_image: { public_id: "", secure_url: "" },
     other_images: [],
-    number: "",
+    room_number: "",
 };
 
 function RoomForm() {
@@ -80,15 +80,14 @@ function RoomForm() {
         if (!hotel_id) return
         if (isEditMode && room_id) {
             // UPDATE LOGIC
-            console.log(`[UPDATE ACTION] Updating Room ${newRoom.number} for Hotel ${hotel_id}. Data:`, newRoom);
+            console.log(`[UPDATE ACTION] Updating Room ${newRoom.room_number} for Hotel ${hotel_id}. Data:`, newRoom);
             dispatch(updateRoom({ data: newRoom, room_id: room_id, hotel_id: hotel_id }));
-            alert(`Updated room ${newRoom.number} successfully! (Mock)`);
+            alert(`Updated room ${newRoom.room_number} successfully! (Mock)`);
 
         } else if (!isEditMode && hotel_id) {
             // CREATE LOGIC
             console.log(`[CREATE ACTION] Creating new Room for Hotel ${hotel_id}. Data:`, newRoom);
             dispatch(createRoom({ data: newRoom, hotel_id: hotel_id! }));
-            alert(`Created new room successfully for hotel ${hotel_id}! (Mock)`);
         } else {
             console.error("Missing hotel_id or room_id for action.");
         }
@@ -97,7 +96,7 @@ function RoomForm() {
 
 
 
-    const title = isEditMode ? `Update Room ${newRoom.number || room_id}` : 'Add New Room';
+    const title = isEditMode ? `Update Room ${newRoom.room_number || room_id}` : 'Add New Room';
     const saveButtonText = isEditMode ? 'Update Room' : 'Save New Room';
 
     return (
@@ -115,10 +114,10 @@ function RoomForm() {
                                         Room Name/No
                                     </label>
                                     <input
-                                        name="number"
+                                        name="room_number"
                                         type="text"
                                         placeholder="Room name/No."
-                                        value={newRoom.number}
+                                        value={newRoom.room_number}
                                         onChange={handleChange}
                                         className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
                                     />

@@ -55,6 +55,9 @@ function Booking() {
                     navigate(newBooking);
                 }}
             /> */}
+            <FloatingAddButton className="   bg-transparent border-[#7f7a06] border rounded-full text-[#7f7a06] active:scale-95 transition-all" onClick={() => {
+                navigate("/bookings/new-booking")
+            }} />
 
         </div>
     );

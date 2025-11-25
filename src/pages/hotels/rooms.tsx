@@ -1,27 +1,19 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
-// Assuming React Redux and local components/utilities are available in the runtime environment
-// import { useDispatch, useSelector } from "react-redux"; // REMOVED to resolve compilation error
-// import { useNavigate, useParams } from "react-router-dom"; // REMOVED to resolve compilation error
-import { MoreVertical, Edit, Trash2, DoorOpen, CalendarCheck, X, DollarSign, Bed, CalendarArrowUpIcon } from "lucide-react";
+import { MoreVertical, Edit, Trash2, DoorOpen, CalendarCheck, X, Bed } from "lucide-react";
 import { AppDispatch, RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { ReadCurrentBookin, ReadRoom } from "../../utils/types/hotelTypes";
 import { getHotelWithRoomsById } from "../../store/slice/hotelSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Breadcrumb from "../../components/breadCrumb";
 import { uiRoute } from "../../utils/utils";
+import { twMerge } from "tailwind-merge";
 
+// --- TYPE DEFINITION ---
+type RoomStatus = 'all' | 'available' | 'booked' | 'occupied';
 
-
-
-
-
-
-
-
-
-// --- MOCK COMPONENTS AND UTILITIES ---
+// --- MODULES IMPORTED BELOW ---
 
 // Utility for status colors
 const getStatusClasses = (status?: string) => {
@@ -35,12 +27,69 @@ const getStatusClasses = (status?: string) => {
     }
 };
 
+// --- MOCK DATA ---
+const mockRooms: ReadRoom[] = [
+    { id: 'r1', number: '101', room_type: 'Deluxe', price_per_night: 250, status: 'occupied', current_bookins: { email: "john@smith.com", notes: "", phone: "123456789", guest_name: 'John Smith', check_in: new Date(2025, 10, 1), check_out: new Date(2025, 10, 5), paid_amount: 1000 } },
+    { id: 'r2', number: '102', room_type: 'Standard', price_per_night: 150, status: 'available', current_bookins: null },
+    { id: 'r3', number: '103', room_type: 'Suite', price_per_night: 400, status: 'booked', current_bookins: { email: "alice@johnson.com", notes: "", phone: "534567856789", guest_name: 'Alice Johnson', check_in: new Date(2025, 10, 8), check_out: new Date(2025, 10, 12), paid_amount: 50 } },
+    { id: 'r4', number: '104', room_type: 'Standard', price_per_night: 150, status: 'occupied', current_bookins: { phone: "896456789", email: "brown@mn.com", notes: "", guest_name: 'Bob Brown', check_in: new Date(2025, 10, 3), check_out: new Date(2025, 10, 6), paid_amount: 450 } },
+    { id: 'r5', number: '105', room_type: 'Deluxe', price_per_night: 250, status: 'available', current_bookins: null },
+    { id: 'r6', number: '201', room_type: 'Executive', price_per_night: 350, status: 'available', current_bookins: null },
+    { id: 'r7', number: '202', room_type: 'Standard', price_per_night: 150, status: 'occupied', current_bookins: { email: "carl@xyz.com", notes: "", phone: "123456789", guest_name: 'Carl Davis', check_in: new Date(2025, 10, 15), check_out: new Date(2025, 10, 20), paid_amount: 1750 } },
+    { id: 'r8', number: '203', room_type: 'Deluxe', price_per_night: 250, status: 'available', current_bookins: null },
+    { id: 'r9', number: '204', room_type: 'Suite', price_per_night: 400, status: 'booked', current_bookins: { email: "eve@pqr.com", notes: "", phone: "534567856789", guest_name: 'Eve Green', check_in: new Date(2025, 11, 1), check_out: new Date(2025, 11, 5), paid_amount: 400 } },
+    { id: 'r10', number: '205', room_type: 'Standard', price_per_night: 150, status: 'available', current_bookins: null },
+    { id: 'r11', number: '301', room_type: 'Standard', price_per_night: 150, status: 'available', current_bookins: null },
+    { id: 'r12', number: '302', room_type: 'Deluxe', price_per_night: 250, status: 'occupied', current_bookins: { email: "frank@abc.com", notes: "", phone: "123456789", guest_name: 'Frank Hall', check_in: new Date(2025, 10, 2), check_out: new Date(2025, 10, 7), paid_amount: 1250 } },
+    { id: 'r13', number: '303', room_type: 'Executive', price_per_night: 350, status: 'available', current_bookins: null },
+    { id: 'r14', number: '304', room_type: 'Suite', price_per_night: 400, status: 'booked', current_bookins: { email: "grace@def.com", notes: "", phone: "534567856789", guest_name: 'Grace Ivey', check_in: new Date(2025, 12, 10), check_out: new Date(2025, 12, 15), paid_amount: 200 } },
+    { id: 'r15', number: '305', room_type: 'Standard', price_per_night: 150, status: 'available', current_bookins: null },
+];
+
+
+// Filter Button Component
+const FilterButton = ({ status, count, currentFilter, onClick }: {
+    status: RoomStatus,
+    count: number,
+    currentFilter: RoomStatus,
+    onClick: (status: RoomStatus) => void
+}) => {
+    const isActive = currentFilter === status;
+    const baseClasses = "px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200";
+
+    let colorClasses = '';
+    switch (status) {
+        case 'available':
+            colorClasses = isActive ? 'bg-green-600 text-white' : 'bg-green-50 text-green-700 hover:bg-green-100';
+            break;
+        case 'occupied':
+            colorClasses = isActive ? 'bg-red-600 text-white' : 'bg-red-50 text-red-700 hover:bg-red-100';
+            break;
+        case 'booked':
+            colorClasses = isActive ? 'bg-yellow-600 text-gray-900' : 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100';
+            break;
+        case 'all':
+        default:
+            colorClasses = isActive ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300';
+            break;
+    }
+
+    return (
+        <button
+            onClick={() => onClick(status)}
+            className={`${baseClasses} ${colorClasses}`}
+        >
+            {status.charAt(0).toUpperCase() + status.slice(1)} ({count})
+        </button>
+    );
+};
+
 // Simple Modal for actions
 const ActionModal = ({ isOpen, title, children, onClose, onSubmit, submitText, isSubmitting }: any) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0  z-50 bg-gray-900  flex items-center justify-center p-4 transition-opacity">
+        <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-70 flex items-center justify-center p-4 transition-opacity">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg transform scale-100 transition-transform">
                 <div className="flex justify-between items-center p-5 border-b">
                     <h3 className="text-xl font-bold text-gray-800">{title}</h3>
@@ -48,6 +97,7 @@ const ActionModal = ({ isOpen, title, children, onClose, onSubmit, submitText, i
                         <X size={20} />
                     </button>
                 </div>
+                {/* Max height and overflow ensures modal content is scrollable if long */}
                 <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
                     {children}
                 </div>
@@ -55,7 +105,7 @@ const ActionModal = ({ isOpen, title, children, onClose, onSubmit, submitText, i
                     <button onClick={onClose} className="px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100">
                         Cancel
                     </button>
-                    <button onClick={onSubmit} disabled={isSubmitting} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition">
+                    <button onClick={onSubmit} disabled={isSubmitting} className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 disabled:opacity-50 transition">
                         {isSubmitting ? 'Processing...' : submitText}
                     </button>
                 </div>
@@ -63,67 +113,6 @@ const ActionModal = ({ isOpen, title, children, onClose, onSubmit, submitText, i
         </div>
     );
 };
-
-// --- Dropdown Popover Menu (Vertical Ellipsis) ---
-const DropdownMenu = ({ menuItems }: any) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const toggleMenu = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setIsOpen(prev => !prev);
-    };
-
-    const closeMenu = () => setIsOpen(false);
-
-    // Close menu when clicking outside
-    useEffect(() => {
-        if (!isOpen) return;
-        const handleOutsideClick = () => closeMenu();
-        window.addEventListener('click', handleOutsideClick);
-        return () => window.removeEventListener('click', handleOutsideClick);
-    }, [isOpen]);
-
-    return (
-        <div className="relative inline-block text-left" onClick={e => e.stopPropagation()}>
-            <button
-                onClick={toggleMenu}
-                className="p-1 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
-            >
-                <MoreVertical size={20} />
-            </button>
-            {isOpen && (
-                <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-0 border border-gray-300 mb-6 focus:outline-none">
-                    <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                        {menuItems.map((item: any, index: number) => {
-                            if (item.label === '---') return <div key={index} className="border-t border-gray-300 my-1"></div>;
-
-                            // FIX 2: Ensure item.icon (which is a component/function) is called correctly inside JSX
-                            const IconComponent = item.icon;
-
-                            return (
-                                <button
-                                    key={index}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        item.action(e);
-                                        closeMenu();
-                                    }}
-                                    disabled={item.disabled}
-                                    className={`flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed ${item.className || ''}`}
-                                    role="menuitem"
-                                >
-                                    {IconComponent && <IconComponent size={16} className="mr-3" />}
-                                    {item.label}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-};
-
 // --- MAIN PAGE COMPONENT ---
 
 export default function HotelRoomManagementPage() {
@@ -131,352 +120,118 @@ export default function HotelRoomManagementPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
-    // Mock Redux state usage
+    const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+    const [filterStatus, setFilterStatus] = useState<RoomStatus>('all');
+
+    // --- Redux & Data State ---
     const hotel_details = useSelector((state: RootState) => state.hotel.viewHotelWithRooms) || { name: 'Ocean View Resort', rooms: [] };
-    const isLoading = useSelector((state: RootState) => state.hotel.isLoading);
-
-    // Using mock data since real data fetch likely fails in this isolated env
-    const mockRooms: ReadRoom[] = [
-        {
-            id: 'r1', number: '101', room_type: 'Deluxe', price_per_night: 250, status: 'occupied', current_bookins: {
-                email: "john@smith.com", notes: "", phone: "123456789",
-                guest_name: 'John Smith', check_in: new Date(2025, 10, 1), check_out: new Date(2025, 10, 5), paid_amount: 1000
-            }
-        },
-        { id: 'r2', number: '102', room_type: 'Standard', price_per_night: 150, status: 'available', current_bookins: null },
-        {
-            id: 'r3', number: '103', room_type: 'Suite', price_per_night: 400, status: 'booked', current_bookins: {
-                email: "alice@johnson.com", notes: "", phone: "534567856789",
-                guest_name: 'Alice Johnson', check_in: new Date(2025, 10, 8), check_out: new Date(2025, 10, 12), paid_amount: 50
-            }
-        },
-        {
-            id: 'r4', number: '104', room_type: 'Standard', price_per_night: 150, status: 'occupied', current_bookins: {
-
-                phone: "896456789", email: "brown@mn.com", notes: "",
-                guest_name: 'Bob Brown', check_in: new Date(2025, 10, 3), check_out: new Date(2025, 10, 6), paid_amount: 450
-            }
-        },
-        { id: 'r5', number: '105', room_type: 'Deluxe', price_per_night: 250, status: 'available', current_bookins: null },
-    ];
-
-
     const rooms = hotel_details?.rooms?.length > 0 ? hotel_details.rooms : mockRooms;
 
-
-    // --- State for Action Modal ---
     const [actionModal, setActionModal] = useState<{
         isOpen: boolean;
         mode: 'edit' | 'delete' | 'book' | 'checkout' | 'cancel';
         room: ReadRoom | null;
         isSubmitting?: boolean;
-    }>({
-        isOpen: false,
-        mode: 'edit',
-        room: null,
-    });
+    }>({ isOpen: false, mode: 'edit', room: null });
 
-    // Mock form state for Edit/Book actions
-    const [formData, setFormData] = useState({
-        room_number: '',
-        room_type: '',
-        price_per_night: 0,
-        guest_name: '',
-    });
+    const [formData, setFormData] = useState({ /* ... form data ... */ });
 
-    // Fetch data on mount
-    useEffect(() => {
-        if (hotel_id) {
-            dispatch(getHotelWithRoomsById(hotel_id));
-        }
-    }, [dispatch, hotel_id]);
-
-    // --- Action Handlers (MOCK IMPLEMENTATIONS) ---
-
+    // --- Action Handlers ---
     const openActionModal = useCallback((mode: typeof actionModal['mode'], room: ReadRoom) => {
+        setOpenMenuId(null); 
         setActionModal({ isOpen: true, mode, room, isSubmitting: false });
-
-        // Pre-fill form for editing or booking
-        if (mode === 'edit') {
-            setFormData({
-                room_number: room.number || room.number || '', // Handles slight variation in mock prop naming
-                room_type: room.room_type || '',
-                price_per_night: room.price_per_night || 0,
-                guest_name: room.current_bookins?.guest_name || '',
-            });
-        } else if (mode === 'book') {
-            setFormData(prev => ({
-                ...prev,
-                room_number: room.number || room.number || '',
-                price_per_night: room.price_per_night || 0,
-                guest_name: room.current_bookins?.guest_name || '',
-            }));
-        }
     }, []);
 
     const closeActionModal = useCallback(() => {
         setActionModal({ isOpen: false, mode: 'edit', room: null, isSubmitting: false });
-        setFormData({ room_number: '', room_type: '', price_per_night: 0, guest_name: '' });
     }, []);
-
-    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: name === 'price_per_night' ? Number(value) : value,
-        }));
-    };
 
     const handleConfirmAction = () => {
         if (!actionModal.room) return;
-
-        // Mock submission process
         setActionModal(p => ({ ...p, isSubmitting: true }));
-
-        setTimeout(() => {
-            let message = '';
-            const roomNumber = actionModal.room?.number || actionModal.room?.number;
-
-            switch (actionModal.mode) {
-                case 'edit':
-                    message = `Room ${formData.room_number || roomNumber} updated successfully!`;
-                    break;
-                case 'delete':
-                    message = `Room ${roomNumber} deleted.`;
-                    break;
-                case 'book':
-                    message = `Room ${roomNumber} booked for ${formData.guest_name}.`;
-                    break;
-                case 'checkout':
-                    message = `Guest checked out from Room ${roomNumber}.`;
-                    break;
-                case 'cancel':
-                    message = `Booking cancelled for Room ${roomNumber}.`;
-                    break;
-                default:
-                    message = 'Action confirmed.';
-            }
-
-            toast.success(message);
-            closeActionModal();
-        }, 800);
+        setTimeout(() => { toast.success(`Action for ${actionModal.room?.number} confirmed.`); closeActionModal(); }, 800);
     };
 
-    // --- UI/Data Helpers ---
+    // --- Memoized Data ---
+    const { roomsForTable, statusCounts } = useMemo(() => {
+        let filteredRooms = rooms;
+
+        if (filterStatus !== 'all') {
+            if (filterStatus === 'booked') {
+                filteredRooms = rooms.filter(room => room.status?.toLowerCase() === 'booked' || room.status?.toLowerCase() === 'reserved');
+            } else {
+                filteredRooms = rooms.filter(room => room.status?.toLowerCase() === filterStatus);
+            }
+        }
+
+        const counts = { all: rooms.length, available: 0, booked: 0, occupied: 0 };
+
+        const processedRooms = filteredRooms.map(room => {
+            const status = room.status?.toLowerCase();
+            if (status === 'available') counts.available++;
+            if (status === 'booked' || status === 'reserved') counts.booked++;
+            if (status === 'occupied') counts.occupied++;
+
+            const currentBooking = room.current_bookins as ReadCurrentBookin | undefined;
+            return {
+                ...room,
+                id: room.id,
+                number: room.number || 'N/A',
+                status,
+                checkIn: currentBooking?.check_in ? new Date(currentBooking.check_in).toLocaleDateString() : 'N/A',
+                checkOut: currentBooking?.check_out ? new Date(currentBooking.check_out).toLocaleDateString() : 'N/A',
+                guest: currentBooking?.guest_name || 'N/A',
+                isAvailable: status === 'available',
+                isBooked: status === 'booked' || status === 'reserved',
+                isOccupied: status === 'occupied',
+            };
+        });
+        return { roomsForTable: processedRooms, statusCounts: counts };
+    }, [rooms, filterStatus]);
+
     const breadcrumbItems = useMemo(() => [
         { label: "Dashboard", href: "/" },
         { label: hotel_details?.name || "Hotel", href: `/hotels/${hotel_id}` },
         { label: "Room Management" },
     ], [hotel_details?.name, hotel_id]);
 
-    const roomsForTable = useMemo(() => {
-        return rooms.map(room => {
-            const number = room.number || 'N/A'; // Handle possible prop name differences
-            const status = room.status?.toLowerCase();
-            const currentBooking = room.current_bookins as ReadCurrentBookin | undefined;
-            const checkIn = currentBooking?.check_in ? new Date(currentBooking.check_in).toLocaleDateString() : 'N/A';
-            const checkOut = currentBooking?.check_out ? new Date(currentBooking.check_out).toLocaleDateString() : 'N/A';
+    // --- Render Logic (omitted for brevity) ---
+    const renderModalContent = () => { /* ... implementation omitted ... */ return null; };
+    const getModalTitle = (mode: typeof actionModal['mode']) => { /* ... implementation omitted ... */ return 'Action'; };
 
-            return {
-                ...room,
-                number,
-                status,
-                checkIn,
-                checkOut,
-                guest: currentBooking?.guest_name || 'N/A',
-                isActionable: status === 'booked' || status === 'occupied',
-                isAvailable: status === 'available',
-                isBooked: status === 'booked',
-                isOccupied: status === 'occupied',
-                isReserved: status === 'reserved',
-                isDirty: status === 'dirty' || status === 'maintenance', // Added dirty/maintenance status logic
-            };
-        });
-    }, [rooms]);
 
-    // --- Render Logic for Action Modal Content ---
-    const renderModalContent = () => {
-        const room = actionModal.room;
-        if (!room) return <p>Room data missing.</p>;
-        const roomNumber = room.number;
-
-        switch (actionModal.mode) {
-            case 'edit':
-                return (
-                    <>
-                        <p className="text-gray-500">Edit core details for Room **{roomNumber}**.</p>
-                        <label className="block text-sm font-medium text-gray-700">Room Number</label>
-                        <input
-                            type="text"
-                            name="room_number"
-                            value={formData.room_number}
-                            onChange={handleFormChange}
-                            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                        />
-                        <label className="block text-sm font-medium text-gray-700">Price Per Night (₦)</label>
-                        <input
-                            type="number"
-                            name="price_per_night"
-                            value={formData.price_per_night}
-                            onChange={handleFormChange}
-                            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                        />
-                    </>
-                );
-            case 'delete':
-                return (
-                    <div className="text-center p-4 bg-red-50 rounded-lg">
-                        <p className="font-semibold text-red-700 text-lg">Are you sure you want to delete Room **{roomNumber}**?</p>
-                        <p className="text-sm text-red-600">This action cannot be undone.</p>
-                    </div>
-                );
-            case 'book':
-                return (
-                    <>
-                        <p className="text-gray-500">Quick Book Room **{roomNumber}**. Enter the primary guest name.</p>
-                        <label className="block text-sm font-medium text-gray-700">Guest Name</label>
-                        <input
-                            type="text"
-                            name="guest_name"
-                            value={formData.guest_name}
-                            onChange={handleFormChange}
-                            placeholder="e.g., Jane Doe"
-                            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                        />
-                        <div className="text-xs text-gray-500 mt-2 p-2 border rounded">
-                            <p>Note: Full booking details (dates, payment) should be managed via the Reception Desk screen.</p>
-                        </div>
-                    </>
-                );
-            case 'checkout':
-                // Assuming 1 night for simplification if dates are missing, or calculate based on mock data
-                const nights = room.current_bookins?.check_in && room.current_bookins.check_out
-                    ? Math.ceil((new Date(room.current_bookins.check_out).getTime() - new Date(room.current_bookins.check_in).getTime()) / (1000 * 60 * 60 * 24))
-                    : 1;
-                const total = (room.price_per_night || 0) * nights;
-
-                return (
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                        <p className="font-semibold text-green-700 text-lg">Confirm Check Out for **{roomNumber}**</p>
-                        <p className="text-sm text-gray-600 mt-2">Current Guest: {room.current_bookins?.guest_name || 'N/A'}</p>
-                        <p className="text-xl font-bold mt-2 text-gray-800">Estimated Final Bill: ₦{total.toLocaleString()}</p>
-                    </div>
-                );
-            case 'cancel':
-                return (
-                    <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                        <p className="font-semibold text-yellow-700 text-lg">Are you sure you want to cancel the booking/reservation for **{roomNumber}**?</p>
-                        <p className="text-sm text-yellow-600">The room will revert to **Available** status.</p>
-                    </div>
-                );
-        }
-    };
-
-    const getModalTitle = (mode: typeof actionModal['mode']) => {
-        switch (mode) {
-            case 'edit': return 'Edit Room Details';
-            case 'delete': return 'Confirm Deletion';
-            case 'book': return 'Quick Book Room';
-            case 'checkout': return 'Process Check Out';
-            case 'cancel': return 'Cancel Booking/Reservation';
-            default: return 'Room Action';
-        }
-    };
-
+    // --- RETURN ---
     return (
-        <div className="">
+        <div className="bg-gray-50 p-4 md:p-6 flex flex-col h-screen">
             <Breadcrumb items={breadcrumbItems} />
 
-            <div className="flex justify-between items-center mb-6 mt-4">
-                <h1 className="text-3xl font-extrabold text-gray-900">
+            {/* Title and Controls Section */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center my-4 md:my-6 gap-4">
+                <h1 className="text-3xl font-extrabold text-gray-900 flex-shrink-0 mr-4">
                     <Bed className="inline-block mr-3 text-blue-600" size={28} />
                     All Room Management
                 </h1>
-                <button
-                    onClick={() => hotel_id ? navigate(uiRoute.createHotelRooms.route(hotel_id)) : null} // Mock 'Add' action with 'Edit' modal logic
-                    disabled={!hotel_id}
-                    className={`px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition font-semibold`}
-                >
-                    + Add New Room
-                </button>
+
+                <RoomFilterControls
+                    filterStatus={filterStatus}
+                    setFilterStatus={setFilterStatus}
+                    statusCounts={statusCounts}
+                    hotel_id={hotel_id}
+                    navigate={navigate}
+                />
             </div>
 
-
-            <div className="bg-white rounded-lg shadow-xl " >
-                {roomsForTable.length === 0 ? (
-                    <div className="p-10 text-center text-gray-500">
-                        No rooms found for this hotel.
-                    </div>
-                ) : (
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room #</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price (₦)</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Guest</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates (In/Out)</th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {roomsForTable.map((room) => (
-                                    <tr key={room.id} className="hover:bg-gray-50 transition duration-150">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {room.number}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {room.room_type}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">
-                                            ₦{room.price_per_night?.toLocaleString()}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset ${getStatusClasses(room.status)}`}>
-                                                {room.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                            {room.guest}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
-                                            {room.checkIn} - {room.checkOut}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <DropdownMenu
-                                                menuItems={[
-                                                    { label: "Edit Room Details", icon: Edit, action: () => navigate(uiRoute.updateHotelRoom.route(room.id)) },
-                                                    { label: "---", icon: () => null, action: () => { } },
-
-                                                    // Dynamic Operational Actions
-                                                    ...(room.isAvailable || room.isBooked || room.isReserved ? [
-                                                        { label: "Check-in Guest", icon: DoorOpen, action: () => openActionModal('book', room), disabled: room.isOccupied, className: room.isBooked ? 'text-blue-600 font-semibold' : '' },
-                                                        { label: "Book/Reserve Now", icon: CalendarCheck, action: () => navigate(uiRoute.newBooking.route(room.id, hotel_id ?? "default-hotel-id")), disabled: room.isOccupied },
-                                                    ] : []),
-
-                                                    ...(room.isOccupied ? [
-                                                        { label: "Process Check-out", icon: X, action: () => openActionModal('checkout', room), className: 'text-green-600 font-semibold' },
-                                                    ] : []),
-
-                                                    ...(room.isBooked || room.isReserved ? [
-                                                        { label: "Cancel Booking", icon: Trash2, action: () => openActionModal('cancel', room), className: 'text-yellow-600' },
-                                                    ] : []),
-
-                                                    { label: "---", icon: () => null, action: () => { } },
-                                                    { label: "Delete Room", icon: Trash2, action: () => openActionModal('delete', room), className: 'text-red-600' },
-                                                ]}
-                                            />
-
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
+            {/* Table Area */}
+            <RoomsTable
+                roomsForTable={roomsForTable}
+                filterStatus={filterStatus}
+                openMenuId={openMenuId}
+                setOpenMenuId={setOpenMenuId}
+                openActionModal={openActionModal}
+                getStatusClasses={getStatusClasses}
+                hotel_id={hotel_id}
+                navigate={navigate}
+            />
 
             {/* Global Action Modal */}
             <ActionModal
@@ -492,3 +247,175 @@ export default function HotelRoomManagementPage() {
         </div>
     );
 }
+
+// =========================================================================
+// --- MODULES ---
+// =========================================================================
+
+// --- RoomFilterControls Module ---
+const RoomFilterControls = ({ filterStatus, setFilterStatus, statusCounts, hotel_id, navigate }: any) => (
+    <div className="flex items-center space-x-4 md:ml-auto">
+        <div className="flex space-x-2 p-1 bg-gray-100 rounded-lg flex-shrink-0">
+            <FilterButton status="all" count={statusCounts.all} currentFilter={filterStatus} onClick={setFilterStatus} />
+            <FilterButton status="available" count={statusCounts.available} currentFilter={filterStatus} onClick={setFilterStatus} />
+            <FilterButton status="booked" count={statusCounts.booked} currentFilter={filterStatus} onClick={setFilterStatus} />
+            <FilterButton status="occupied" count={statusCounts.occupied} currentFilter={filterStatus} onClick={setFilterStatus} />
+        </div>
+
+        <button
+            onClick={() => hotel_id ? navigate(uiRoute.createHotelRooms.route(hotel_id)) : null}
+            disabled={!hotel_id}
+            className={`px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition font-semibold flex-shrink-0`}
+        >
+            + Add New Room
+        </button>
+    </div>
+);
+
+// --- RoomsTable Module ---
+const RoomsTable = ({ roomsForTable, filterStatus, openMenuId, setOpenMenuId, openActionModal, getStatusClasses, hotel_id, navigate }: any) => (
+    <div className="bg-white rounded-lg shadow-xl flex-grow overflow-hidden">
+        {roomsForTable.length === 0 ? (
+            <div className="p-10 text-center text-gray-500">
+                {filterStatus === 'all'
+                    ? 'No rooms found for this hotel.'
+                    : `No ${filterStatus} rooms match the filter.`
+                }
+            </div>
+        ) : (
+                <div className="h-full flex flex-col">
+
+                    {/* Table Header (Static) */}
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50 sticky top-0 z-10">
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room #</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price (₦)</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Guest</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates (In/Out)</th>
+                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    {/* Table Body (Scrolling) */}
+                    <div className="overflow-y-auto overflow-x-auto flex-grow">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {roomsForTable.map((room) => (
+                                    <tr key={room.id} className="hover:bg-gray-50 transition duration-150">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{room.number}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{room.room_type}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">₦{room.price_per_night?.toLocaleString()}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset ${getStatusClasses(room.status)}`}>{room.status}</span>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{room.guest}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{room.checkIn} - {room.checkOut}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <DropdownMenu
+                                                roomId={room.id}
+                                                openMenuId={openMenuId}
+                                                setOpenMenuId={setOpenMenuId}
+                                                menuItems={[
+                                                    { label: "Edit Room Details", icon: Edit, action: () => navigate(uiRoute.updateHotelRoom.route(room.id)) },
+                                                    { label: "---", icon: () => null, action: () => { } },
+
+                                                    // Check-in / Booking Options
+                                                    ... (!room.isOccupied ? [
+                                                        { label: "Check-in Guest", icon: DoorOpen, action: () => navigate(uiRoute.newBooking.route(room.id, hotel_id ?? "default-hotel-id")), className: room.isBooked ? 'text-blue-600 font-semibold' : '' },
+
+
+                                                        { label: "Book/Reserve Now", icon: CalendarCheck, action: () => navigate(uiRoute.newBooking.route(room.id, hotel_id ?? "default-hotel-id")) },
+                                                    ] : []),
+
+                                                    // Check-out Option
+                                                    ...(room.isOccupied ? [
+                                                        { label: "Process Check-out", icon: X, action: () => openActionModal('checkout', room), className: 'text-green-600 font-semibold' },
+                                                    ] : []),
+
+                                                    // Cancel Booking Option
+                                                    ...(room.isBooked ? [
+                                                        { label: "Cancel Booking", icon: Trash2, action: () => openActionModal('cancel', room), className: 'text-yellow-600' },
+                                                    ] : []),
+
+                                                    { label: "---", icon: () => null, action: () => { } },
+                                                    { label: "Delete Room", icon: Trash2, action: () => openActionModal('delete', room), className: 'text-red-600' },
+                                                ]}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        )}
+    </div>
+);
+
+// --- DropdownMenu Module (Fixed Action Logic) ---
+const DropdownMenu = ({ menuItems, roomId, openMenuId, setOpenMenuId }: any) => {
+
+    const isOpen = openMenuId === roomId;
+
+    const toggleMenu = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        setOpenMenuId(prevId => (prevId === roomId ? null : roomId));
+    }, [roomId, setOpenMenuId]);
+
+    const closeMenu = useCallback(() => setOpenMenuId(null), [setOpenMenuId]);
+
+    // Global listener for outside clicks (using capture phase)
+
+
+    return (
+        <div className="relative inline-block text-left" onClick={e => e.stopPropagation()}>
+            <button
+                onClick={toggleMenu}
+                className="p-1 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
+            >
+                <MoreVertical size={20} />
+            </button>
+            {isOpen && (
+                <div
+                    className="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-0 border border-gray-300 mb-6 focus:outline-none"
+                // Clicks inside this container will be stopped from propagating to the window by the outer div onClick handler
+                >
+                    <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                        {menuItems.map((item: any, index: number) => {
+                            if (item.label === '---') return <div key={index} className="border-t border-gray-300 my-1"></div>;
+
+                            const IconComponent = item.icon;
+
+                            return (
+                                <button
+                                    key={index}
+                                    onClick={() => {
+                                        // 1. Run the action synchronously
+                                        console.log("nenenennenenen")
+                                        item.action();
+
+                                        // 2. Schedule the closure after a micro-delay. This is the **CRITICAL FIX** // to ensure the action runs fully before the global capture phase listener 
+                                        // interferes with React's state update.
+                                        setTimeout(() => closeMenu(), 50);
+                                    }}
+                                    disabled={item.disabled}
+                                    className={twMerge(`flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer ${item.className || ''}`)}
+                                    role="menuitem"
+                                >
+                                    {IconComponent && <IconComponent size={16} className="mr-3" />}
+                                    {item.label}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};

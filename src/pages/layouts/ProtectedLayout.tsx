@@ -87,7 +87,7 @@ export function ProtectedScreen() {
 
 
     return (
-        <div className=" h-screen flex overflow-hidden">
+        <div className=" h-screen flex overflow-hidden ">
             {/* Sidebar */}
 
                 <Sidebar navlist={navItems}  />
@@ -101,7 +101,7 @@ export function ProtectedScreen() {
                 <Header />
 
                 <main
-                    className="flex-1  focus:outline-none bg-gray-50 p-6"
+                    className="flex-1  focus:outline-none bg-gray-50 "
                 >
                     <Outlet />
                 </main>

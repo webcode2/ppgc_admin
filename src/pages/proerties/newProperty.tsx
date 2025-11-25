@@ -8,6 +8,7 @@ import { OutlineButton, SolidButton } from "../../components/buttons";
 import { ArrowLeft, ArrowRight, Save } from "lucide-react";
 import { Area, Errors, PropertyImage, PropertyPayload } from "../../utils/types/propertiesType";
 import { AppDispatch, RootState } from "../../store";
+import { uploadSignedImageTest } from "../../../signing";
 
 const PropertyWizard = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -30,7 +31,6 @@ const PropertyWizard = () => {
             country: "",
             state_or_province: "",
             city_or_town: "",
-            county: "",
             street: "",
             zip_or_postal_code: "",
             building_name_or_suite: "",
@@ -88,6 +88,8 @@ const PropertyWizard = () => {
     const handleCoverDrop = (files: File[]) => {
         if (!files?.length) return;
         const f = files[0];
+        console.log(f)
+        uploadSignedImageTest(f, "ppgc_properties")
         setProperty((prev) => ({
             ...prev,
             cover_image: { public_id: f.name, secure_url: URL.createObjectURL(f) },
@@ -122,7 +124,6 @@ const PropertyWizard = () => {
         "country",
         "state_or_province",
         "city_or_town",
-        "county",
         "street",
         "zip_or_postal_code",
         "building_name_or_suite",

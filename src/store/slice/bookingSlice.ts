@@ -31,6 +31,7 @@ export const addBooking = createAsyncThunk<
     'booking/addBooking',
     async ({ data }, { rejectWithValue }) => {
         try {
+            console.log("Creating booking with data:", data);
             const response = await apiClient.post(apiRoute.createBookings.route, data);
             return handleBookingResponse(response, rejectWithValue, "Booking created successfully.");
         } catch (err) {
@@ -122,6 +123,7 @@ const initialState: BookingState = {
     isLoading: false,
     error: null,
     isSubmitting: false,
+    isDeleting: false
 
 };
 
