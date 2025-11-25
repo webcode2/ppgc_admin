@@ -87,39 +87,44 @@ export function ProtectedScreen() {
 
 
     return (
-        <div className=" h-screen flex overflow-hidden ">
-            {/* Sidebar */}
+        <>
+            <div className=" h-screen md:flex overflow-hidden  hidden ">
+                {/* Sidebar */}
 
-                <Sidebar navlist={navItems}  />
+                <Sidebar navlist={navItems} />
 
 
-            {/* Main Area */}
-            <div ref={mainContentRef}
-                tabIndex={-1}
-                id="main-content" // <-- Required to make focus() work
-                className="flex flex-col flex-1 overflow-y-auto focus:outline-none">
-                <Header />
+                {/* Main Area */}
+                <div ref={mainContentRef}
+                    tabIndex={-1}
+                    id="main-content" // <-- Required to make focus() work
+                    className="flex flex-col flex-1 overflow-y-auto focus:outline-none">
+                    <Header />
 
-                <main
-                    className="flex-1  focus:outline-none bg-gray-50 "
-                >
-                    <Outlet />
-                </main>
+                    <main
+                        className="flex-1  focus:outline-none bg-gray-50 "
+                    >
+                        <Outlet />
+                    </main>
+                </div>
+
+                <ToastContainer
+                    position="top-right"
+                    autoClose={3000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick={false}
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                    transition={Bounce}
+                />
             </div>
-
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-                transition={Bounce}
-            />
-        </div>
+            <div className="md:hidden text-center h-screen">
+                Switch to desktop to view
+            </div>
+        </>
     );
 }
