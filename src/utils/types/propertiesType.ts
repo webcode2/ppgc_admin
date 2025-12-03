@@ -85,3 +85,19 @@ export type PropertyPayload = {
     features: string[];
     area: Area;
 };
+
+
+
+export interface PropertyList {
+    id: string;
+    title: string;
+    type: string;
+    description: string;
+    price: number;
+    cover_image: { secure_url: string; };
+    is_sold: boolean;
+    is_in_negotiation: boolean;
+    sold_price?: number;
+    client_name?: string;
+    client_contact?: string;
+}

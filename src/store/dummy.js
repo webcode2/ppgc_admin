@@ -47,8 +47,7 @@ export const rooms = [
     { roomNo: 110, price: 100, status: "available" },
 ];
 
-
-// roperties
+// properties
 export const inspectionData = [
     {
         name: 'Alice Johnson',
@@ -56,6 +55,8 @@ export const inspectionData = [
         inspectionDate: '2025-08-10',
         inspectionTime: '10:30 AM',
         callNumber: '+1 (555) 123-4567',
+        // Assuming this date is in the past
+        status: 'Inspected', 
     },
     {
         name: 'Michael Smith',
@@ -63,6 +64,8 @@ export const inspectionData = [
         inspectionDate: '2025-08-12',
         inspectionTime: '02:00 PM',
         callNumber: '+1 (555) 987-6543',
+        // Assuming this date is in the past
+        status: 'Inspected', 
     },
     {
         name: 'Sara Williams',
@@ -70,20 +73,26 @@ export const inspectionData = [
         inspectionDate: '2025-08-15',
         inspectionTime: '11:00 AM',
         callNumber: '+1 (555) 555-0199',
+        // Assuming this date is in the past
+        status: 'Inspected', 
     },
     {
         name: 'David Brown',
         property: 'Oceanfront Suites - Penthouse',
-        inspectionDate: '2025-08-18',
+        inspectionDate: '2025-12-18', // Updated month to make it upcoming
         inspectionTime: '09:00 AM',
         callNumber: '+1 (555) 222-3333',
+        // Assuming this date is in the future
+        status: 'Upcoming', 
     },
     {
         name: 'Emily Davis',
         property: 'Hilltop Residences - Unit 5D',
-        inspectionDate: '2025-08-20',
+        inspectionDate: '2025-12-20', // Updated month to make it upcoming
         inspectionTime: '03:30 PM',
         callNumber: '+1 (555) 444-7788',
+        // Assuming this date is in the future
+        status: 'Upcoming', 
     },
     {
         name: 'John Miller',
@@ -91,23 +100,28 @@ export const inspectionData = [
         inspectionDate: '2025-08-21',
         inspectionTime: '01:15 PM',
         callNumber: '+1 (555) 666-1234',
+        // Assuming this date is in the past
+        status: 'Inspected', 
     },
     {
         name: 'Olivia Taylor',
         property: 'Cityview Lofts - Unit 2E',
-        inspectionDate: '2025-08-22',
+        inspectionDate: '2025-12-22', // Updated month to make it upcoming
         inspectionTime: '04:00 PM',
         callNumber: '+1 (555) 777-4321',
+        // Assuming this date is in the future
+        status: 'Upcoming', 
     },
     {
         name: 'James Anderson',
         property: 'Lakeside Homes - Unit 9G',
-        inspectionDate: '2025-08-25',
+        inspectionDate: '2025-12-25', // Updated month to make it upcoming
         inspectionTime: '12:45 PM',
         callNumber: '+1 (555) 888-5678',
+        // Assuming this date is in the future
+        status: 'Upcoming', 
     },
 ];
-
 
 // notification
 

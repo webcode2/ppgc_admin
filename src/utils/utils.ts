@@ -15,7 +15,14 @@ export const uiRoute = {
     // ____________________________________BOOKINGS_______________________________
 
     "bookings": { name: "Bookings", route: "/bookings", pattern: "bookings" },
-    "newBooking": { name: "New Booking", route: (room_id: string | number, hotel_id: string | number | null) => `/bookings/${hotel_id}/${room_id}/new-booking`, pattern: "bookings/:hotel_id/:room_id/new-booking" },
+    "newBooking": {
+        name: "New Booking",
+        route: (room_id: string | number, hotel_id: string | number | null) => `/bookings/${hotel_id}/${room_id}/new-booking`, pattern: "bookings/:hotel_id/:room_id/new-booking"
+    },
+    "newBookings_withHotel": {
+        name: "New Booking",
+        route: `/bookings/new-booking`, pattern: "/bookings/new-booking"
+    },
 
     // ___________________________________________________________________________
     //      _____________________________HOTELS___________________________

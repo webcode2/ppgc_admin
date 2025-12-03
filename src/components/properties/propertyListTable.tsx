@@ -5,28 +5,17 @@ import { AppDispatch } from "../../store";
 import { useDispatch } from "react-redux";
 import { deleteProperty } from "../../store/slice/propertySlice";
 import { uiRoute } from "../../utils/utils";
+import { PropertyList } from "../../utils/types/propertiesType";
 
-interface Property {
-    id: string;
-    title: string;
-    type: string;
-    description: string;
-    price: number;
-    cover_image: { secure_url: string; };
-    is_sold: boolean;
-    is_in_negotiation: boolean;
-    sold_price?: number;
-    client_name?: string;
-    client_contact?: string;
-}
+
 
 interface PropertyListTableProps {
-    data: Property[];
+    data: PropertyList[];
 }
 
 // --- Component for the Action Popover ---
 const ActionPopover = ({ property, onUpdate, onDelete, onViewClient, onClose }: {
-    property: Property;
+    property: PropertyList;
     onUpdate: (id: string) => void;
     onDelete: (id: string) => void;
     onViewClient: (id: string) => void;

@@ -404,14 +404,13 @@ const hotelSlice = createSlice({
                 } else {
                     state.error = action.error.message || "Oops! something went wrong";
                 }
-            })
+            });
 
             // --- getAllHotel ---
-            .addCase(getAllHotel.pending, (state) => {
+        builder.addCase(getAllHotel.pending, (state) => {
                 state.isLoading = true
                 state.error = null;
-            })
-            .addCase(getAllHotel.fulfilled, (state, action: PayloadAction<Hotel[]>) => {
+        }).addCase(getAllHotel.fulfilled, (state, action: PayloadAction<Hotel[]>) => {
                 state.hotels = action.payload
                 state.isLoading = false
             })

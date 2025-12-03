@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { fetchPropertyById } from "../../store/slice/propertySlice";
 import { twMerge } from "tailwind-merge"
+import Loading from "../../components/loading";
 // --- Type Definition for image structure (Assuming from the Redux state) ---
 type Image = {
     secure_url: string;
@@ -96,12 +97,13 @@ export default function PropertyViewPage() {
         }
     }, [property, galleryImages, selectedImage]);
 
-    // --- Data Fetching & Initial Focus Effect ---
-    // useEffect(() => {
-    //     if (property_id) {
-    //         dispatch(fetchPropertyById(property_id));
-    //     }
-    // }, [property_id, dispatch]);
+    // Data Fetching & Initial Focus Effect-- -
+    useEffect(() => {
+        if (property_id) {
+            dispatch(fetchPropertyById(property_id));
+        }
+    }, [property_id, dispatch]);
+
 
     useEffect(() => {
         // Implement initial scroll focus for UX/Accessibility (MDN technique)
@@ -130,12 +132,7 @@ export default function PropertyViewPage() {
     // --- Loading and Error States ---
     if (isLoading || !property) {
         if (isLoading) {
-            return (
-                <div className="flex items-center justify-center min-h-screen bg-gray-50">
-                    <Loader2 size={40} className="animate-spin text-[#007AFF] mr-3" />
-                    <span className="text-lg text-gray-600">Loading Property Details...</span>
-                </div>
-            );
+            return <Loading text="Loading Property Details" />
         }
         const errorMessage = typeof error === 'string' ? error : (error as any)?.message || "Property not found.";
         return <div className="p-10 text-center text-red-600 min-h-screen bg-white">Error: {errorMessage}</div>;
@@ -151,6 +148,7 @@ export default function PropertyViewPage() {
             <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6  md:p-0">
 
                 {/* -------------------- 1. LEFT/MAIN CONTENT (COL 1-8) -------------------- */}
+
                 <main className="lg:col-span-8 space-y-6">
 
                     {/* HERO IMAGE & BASIC INFO (Enhanced Gallery) */}
@@ -194,8 +192,9 @@ export default function PropertyViewPage() {
                         )}
 
                         {/* Overview and Key Stats - Remains same */}
+
                         <div className="p-6">
-                            <h1 className="text-xl font-heading sm:text-2xl font-bold text-[#212529] mb-1 ">{property.title}</h1>
+                            <h1 className="text-xl font-heading sm:text-2xl font-bold text-[#212529] mb-1 ">{property.title}    </h1>
                             <p className="text-sm font-medium text-gray-500 flex items-center mb-6">
                                 <MapPin size={18} className="mr-2 text-red-500" />
                                 {property.area?.street}, {property.area?.city_or_town}, {property.area?.state_or_province}

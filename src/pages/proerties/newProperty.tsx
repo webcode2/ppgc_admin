@@ -130,7 +130,7 @@ const PropertyWizard = () => {
     ];
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-5">
             {/* ---------------- STEP 1 ---------------- */}
             {step === 1 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -192,13 +192,7 @@ const PropertyWizard = () => {
                     <div className="h-full">
                         <DashboardCard title="Cover Image" showDropDown={false}>
                             <FileUpload onDropFile={handleCoverDrop} />
-                            {property.cover_image.secure_url && (
-                                <img
-                                    src={property.cover_image.secure_url}
-                                    alt="Cover Preview"
-                                    className="mt-4 w-full h-48 object-cover rounded-md border"
-                                />
-                            )}
+
                             {errors.cover_image && <p className="text-red-500 text-xs">{errors.cover_image}</p>}
                         </DashboardCard>
                     </div>
@@ -285,16 +279,7 @@ const PropertyWizard = () => {
                     <div className="h-full">
                         <DashboardCard title="Other Images" showDropDown={false}>
                             <FileUpload onDropFile={handleOtherImagesDrop} multiple />
-                            <div className="mt-4 grid grid-cols-3 gap-2">
-                                {property.other_images.map((img, idx) => (
-                                    <img
-                                        key={idx}
-                                        src={img.secure_url}
-                                        alt={`Property Image ${idx + 1}`}
-                                        className="w-full h-24 object-cover rounded-md border"
-                                    />
-                                ))}
-                            </div>
+
                         </DashboardCard>
                     </div>
 
