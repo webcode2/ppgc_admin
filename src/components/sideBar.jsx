@@ -31,7 +31,7 @@ export default function   Sidebar({ navlist }) {
                     className={({ isActive }) =>
                       `flex items-center space-x-4 px-4 py-2 transition-all ${isActive
                         ? 'bg-gradient-to-r to-[#938E07] from-[#F9F10C] text-black'
-                        : 'text-gray-700 hover:bg-gray-200 hover:text-[#938E07]'
+                        : 'text-gray-900 hover:bg-gray-200 hover:text-[#938E07]'
                       }`
                     }
                   >

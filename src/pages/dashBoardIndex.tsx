@@ -79,12 +79,13 @@ function DashBoardIndex() {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.4, delay: i * 0.1 }}
-                            ><div className="flex gap-x-2 items-center text-[#938E07]">
+                            >
+                                <div className="flex gap-x-2 items-center text-[#938E07]">
 
                                     {card.data.icon}
                                     <p className="text-lg font-bold text-gray-800">{card.title}</p>
                                 </div>
-                                <div className="flex mt-2 gap-3">
+                                <div className="flex mt-2 gap-3 justify-between">
 
                                     <h3 className="text-xs font-medium mb-2 text-gray-600 whitespace-break-spacess">{card.data.labelUp}</h3>
                                     <p className="text-2xl font-bold">{card.data.valueUp}</p>
@@ -99,6 +100,7 @@ function DashBoardIndex() {
                     </div>
                 </DashboardCard>
             </div>
+
             <div className="w-full grid grid-cols-12 gap-5">
                 {/* Left side — top row */}
                 <div className="col-span-9">

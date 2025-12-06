@@ -18,7 +18,7 @@ export default function InspectionBookingTable({ data }: InspectionBookingTableP
     const getButtonClass = (buttonFilter: "All" | InspectionStatus) => {
         return `py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
             filter === buttonFilter
-                ? "bg-blue-600 text-white shadow-md"
+                ? "bg-[#938E07] text-white shadow-md"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
         }`;
     };

@@ -1,4 +1,5 @@
 import { ReadInvestmentItem } from "../utils/types/investment";
+import { InspectionItem } from "../utils/types/propertyInspection";
 
 export const propertyList = [
     {
@@ -50,7 +51,7 @@ export const rooms = [
 ];
 
 // properties
-export const inspectionData = [
+export const inspectionData :InspectionItem[]= [
     {
         name: 'Alice Johnson',
         property: 'Sunset Apartments - Unit 12B',

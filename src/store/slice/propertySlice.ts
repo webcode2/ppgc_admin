@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import apiClient from "../../utils/axiosConfig";
 import { ApiError, Property, PropertyList, PropertyPayload, UpdatePropertyPayload } from "../../utils/types/propertiesType";
+import { InspectionItem } from '../../utils/types/propertyInspection';
 
 
 
@@ -12,6 +13,7 @@ import { ApiError, Property, PropertyList, PropertyPayload, UpdatePropertyPayloa
 interface PropertyState {
     properties: PropertyList[];
     newProperty: Property;
+    inspectionData: InspectionItem[]
 
     propertyTypes: string[]
     isDeleting: boolean;
@@ -30,6 +32,8 @@ interface PropertyState {
 
 const initialState: PropertyState = {
     properties: [],
+    inspectionData: [],
+
     newProperty: {
         other_images: [],
         id: "",
@@ -41,7 +45,7 @@ const initialState: PropertyState = {
         description: "",
         area: { building_name_or_suite: "", city_or_town: "", country: "", state_or_province: "", street: "", zip_or_postal_code: "" },
         availability: "available"
-        
+
     },
     selectedProperty: {
         "id": "prop-54321",
@@ -132,11 +136,21 @@ const propertySlice = createSlice({
             .addCase(fetchProperties.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.message || 'Failed to fetch properties';
-            })
-            .addCase(createProperty.pending, (state) => {
-                state.isLoading = true;
+            });
 
-            })
+        builder.addCase(fetchInspections.pending, (state) => {
+
+        }).addCase(fetchInspections.fulfilled, (state, action) => {
+            state.inspectionData = action.payload
+
+        }).addCase(fetchInspections.rejected, (state, action) => {
+            state.error = action.payload
+        });
+
+        builder.addCase(createProperty.pending, (state) => {
+            state.isLoading = true;
+
+        })
             .addCase(createProperty.fulfilled, (state, action) => {
                 state.isLoading = false
 
@@ -206,11 +220,52 @@ export const createProperty = createAsyncThunk<Property, // 1. Return type on su
         }
     }
 );
+
+
 /**
  * Thunk to fetch all properties ( /pGETroperties/)
  * @param {object} [filters] - Optional query parameters for filtering/pagination.
  */
-export const fetchProperties = createAsyncThunk<PropertyList[], object | undefined, { rejectValue: ApiError }>(
+export const fetchInspections = createAsyncThunk<
+    InspectionItem[],
+    Record<string, string> | string | null,
+    { rejectValue: ApiError }
+>(
+    "properties/fetchInspections",
+
+    async (filters, { rejectWithValue }) => {
+        try {
+            const qs = filters && typeof filters === "object"
+                ? "?" + new URLSearchParams(filters).toString()
+                : "";
+
+            const response = await apiClient.get<InspectionItem[]>(`/inspections/all/${qs}`);
+
+            if (response.status === 200) {
+                return response.data;
+            }
+
+            return rejectWithValue({
+                message: "Failed to fetch inspections",
+                status: response.status,
+            });
+        } catch (err: any) {
+            return rejectWithValue({
+                message: err.response?.data || err.message || "oops! something went wrong",
+                status: err.response?.status || 500,
+            });
+        }
+    }
+);
+
+
+
+
+/**
+ * Thunk to fetch all properties ( /pGETroperties/)
+ * @param {object} [filters] - Optional query parameters for filtering/pagination.
+ */
+export const fetchProperties = createAsyncThunk<PropertyList[], object | string, { rejectValue: ApiError }>(
     'properties/fetchProperties', async (filters, { rejectWithValue }) => {
         try {
             // Construct query string if filters are provided
@@ -301,7 +356,7 @@ export const deleteProperty = createAsyncThunk<
             // const response = await apiClient.delete(`/properties/${propertyId}`); 
 
             // Mocking a successful response for demonstration
-            const response = { status: 200 }; 
+            const response = { status: 200 };
 
             // Assuming 204 No Content or 200 OK for successful deletion
             if (response.status === 204 || response.status === 200) {

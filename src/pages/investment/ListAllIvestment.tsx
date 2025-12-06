@@ -14,7 +14,7 @@ function InvestmentScreen() {
 
 
     return (
-        <div className="space-y-6  px-5">
+        <div className="space-y-6  p-5">
             <div className="relative overflow-hidden rounded-2xl">
                 <DashboardCard sub_title="In the last 30 days" title="Investment Overview" className="pb-0 overflow-hidden " showDropDown={false} >
                     <motion.div

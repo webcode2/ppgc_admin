@@ -6,7 +6,7 @@ import FloatingAddButton from "../../components/AddFloatingButton"
 import PropertyListTable from "../../components/properties/propertyListTable"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../../store"
-import { fetchProperties } from "../../store/slice/propertySlice"
+import { fetchInspections, fetchProperties } from "../../store/slice/propertySlice"
 import { inspectionData } from '../../store/dummy'
 
 function PropertyScreen() {
@@ -17,11 +17,18 @@ function PropertyScreen() {
 
 
     useEffect(() => {
-        dispatch(fetchProperties())
+        dispatch(fetchProperties({
+            page: String(1),
+            size: String(8),
+        }))
+        dispatch(fetchInspections({
+            page: String(1),
+            size: String(4)
+        }))
     }, [])
 
 
-// once properties is fetch 
+    // once properties is fetch 
 
     return (
         <div className="space-y-6 p-5">

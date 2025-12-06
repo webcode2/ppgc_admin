@@ -406,11 +406,12 @@ const hotelSlice = createSlice({
                 }
             });
 
-            // --- getAllHotel ---
+        // --- getAllHotel ---
         builder.addCase(getAllHotel.pending, (state) => {
-                state.isLoading = true
-                state.error = null;
-        }).addCase(getAllHotel.fulfilled, (state, action: PayloadAction<Hotel[]>) => {
+            state.isLoading = true
+            state.error = null;
+        })
+            .addCase(getAllHotel.fulfilled, (state, action: PayloadAction<Hotel[]>) => {
                 state.hotels = action.payload
                 state.isLoading = false
             })
@@ -422,12 +423,10 @@ const hotelSlice = createSlice({
                 } else {
                     state.error = action.error.message || "Oops! something went wrong";
                 }
-            })
+            });
 
-            // --- FOR DELETION (deleteHotel) ---
-            .addCase(
-                deleteHotel.pending, (state) => { state.isDeleting = true }
-            )
+        // --- FOR DELETION (deleteHotel) ---
+        builder.addCase(deleteHotel.pending, (state) => { state.isDeleting = true })
             .addCase(deleteHotel.fulfilled, (state, action: PayloadAction<{ id: string | number }>) => {
                 state.isDeleting = false;
                 // FIX: Correctly filtering the hotels array
@@ -442,10 +441,10 @@ const hotelSlice = createSlice({
                 } else {
                     state.error = action.error.message || "Oops! something went wrong";
                 }
-            })
+            });
 
-            // --- UPDATE (updateHotel) ---
-            .addCase(updateHotel.pending, (state) => { state.isUpdaing = true; state.error = null; })
+        // --- UPDATE (updateHotel) ---
+        builder.addCase(updateHotel.pending, (state) => { state.isUpdaing = true; state.error = null; })
             .addCase(updateHotel.fulfilled, (state, action: PayloadAction<Hotel>) => {
                 state.isUpdaing = false;
                 // Find and replace the updated hotel in the array
@@ -472,7 +471,7 @@ const hotelSlice = createSlice({
             })
             .addCase(getRoom.rejected, handleRejected);
 
-            // GET SINGLE HOTEL
+        // GET SINGLE HOTEL
         builder.addCase(getSingleHotelById.pending, (state) => { state.isLoading = true; state.error = null; })
             .addCase(getSingleHotelById.fulfilled, (state, action: PayloadAction<Hotel>) => {
                 state.isLoading = false;
