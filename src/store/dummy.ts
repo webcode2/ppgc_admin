@@ -1,3 +1,5 @@
+import { ReadInvestmentItem } from "../utils/types/investment";
+
 export const propertyList = [
     {
         id: 1,
@@ -155,7 +157,7 @@ export const notificationsData = [
 
 // investments
 
-export const invested = [
+export const invested: ReadInvestmentItem[]= [
     {
         name: "Jane Doe",
         category: "Land banking",

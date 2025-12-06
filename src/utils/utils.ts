@@ -1,5 +1,5 @@
-export const API_SERVER_BASE_URL = `https://ppgc-fastapi-latest.onrender.com`
-// export const API_SERVER_BASE_URL: string = `http://localhost:8000`
+// export const API_SERVER_BASE_URL = `http://ppgc-fastapi-latest.onrender.com`
+export const API_SERVER_BASE_URL: string = `http://localhost:8000`
 
 
 
@@ -84,13 +84,6 @@ export const uiRoute = {
 }
 
 
-
-
-
-
-
-
-
 export const apiRoute = {
     // --- POST_Auth routes (Static) ---
     authLogin: { name: "login", route: `${API_SERVER_BASE_URL}/auth/login` },
@@ -107,7 +100,7 @@ export const apiRoute = {
     },
     getHotels: {
         name: "getHotels",
-        route: `${API_SERVER_BASE_URL}/hotels/`
+        route: `${API_SERVER_BASE_URL}/hotels`
     },
 
     /**

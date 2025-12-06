@@ -5,7 +5,6 @@ import {
   Navigate,
   Outlet,
 } from "react-router";
-import DefaultScreen from "./pages/layouts/DefaultScreen";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import ResetPassword from "./pages/auth/foget_newpost";
@@ -17,11 +16,6 @@ import TokenVerifyScreenSuccess from "./pages/auth/successScreen";
 import Booking from "./pages/bookings/BookingPage";
 import PropertyWizard from "./pages/proerties/newProperty";
 import UpdatePropertyScreen from "./pages/proerties/updateProperty";
-import InvestmentScreen from "./pages/investment/ListAllIvestment";
-import ProfileForm from "./pages/profile/updateProfile";
-import AccountSettings from "./pages/profile/AccountSettings";
-import ProfileScreen from "./pages/profile/profile";
-import NotificationUI from "./pages/notifications";
 import NewHotel from "./pages/hotels/newHotel";
 import Hotel from "./pages/hotels/hotelList";
 import EditHotel from "./pages/hotels/updateHotel";
@@ -35,6 +29,13 @@ import RoomBookingPage from "./pages/bookings/roomBookingPage";
 import PropertyDetailPage from "./pages/proerties/singleProperty";
 import RoomBookingPageNew from "./pages/bookings/searchAvail";
 import RoomBookingNew from "./pages/bookings/searchAvail";
+import InvestmentScreen from "./pages/investment/ListAllIvestment.tsx";
+import InvestmentPlanForm from "./pages/investment/newInvestment.tsx";
+import SavingsDashboard from "./pages/savings/savingScreen.tsx";
+import AccountSettings from "./pages/profile/AccountSettings";
+import ProfileScreen from"./pages/profile/profile"
+import ProfileForm from "./pages/profile/updateProfile"
+import NotificationUI from "./pages/notifications"
 
 
 
@@ -81,13 +82,20 @@ let router = createBrowserRouter([
 
       // Invevstment
       { path: "investments/", Component: InvestmentScreen },
+      { path: "investments/new", Component: InvestmentPlanForm },
+
+      // savings
+      { path: "savings", Component: SavingsDashboard },
+
+
       // Profile
       { path: "profile", Component: ProfileScreen },
       { path: "profile/settings", Component: AccountSettings },
       { path: "profile/update", Component: ProfileForm },
 
+
       // Notification
-      { path: "notifications", Component: NotificationUI },
+      { path: "notifications", Component:NotificationUI },
 
 
 

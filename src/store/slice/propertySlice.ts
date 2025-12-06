@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import apiClient from "../../utils/axiosConfig";
-import { ApiError, Property, PropertyPayload, UpdatePropertyPayload } from "../../utils/types/propertiesType";
+import { ApiError, Property, PropertyList, PropertyPayload, UpdatePropertyPayload } from "../../utils/types/propertiesType";
 
 
 
@@ -10,7 +10,7 @@ import { ApiError, Property, PropertyPayload, UpdatePropertyPayload } from "../.
 
 // Define the complete slice state
 interface PropertyState {
-    properties: Property[];
+    properties: PropertyList[];
     newProperty: Property;
 
     propertyTypes: string[]
@@ -125,7 +125,7 @@ const propertySlice = createSlice({
                 state.isLoading = true;
                 state.error = null;
             })
-            .addCase(fetchProperties.fulfilled, (state, action: PayloadAction<Property[]>) => {
+            .addCase(fetchProperties.fulfilled, (state, action: PayloadAction<PropertyList[]>) => {
                 state.properties = action.payload;
                 state.isLoading = false;
             })
@@ -210,13 +210,13 @@ export const createProperty = createAsyncThunk<Property, // 1. Return type on su
  * Thunk to fetch all properties ( /pGETroperties/)
  * @param {object} [filters] - Optional query parameters for filtering/pagination.
  */
-export const fetchProperties = createAsyncThunk<Property[], object | undefined, { rejectValue: ApiError }>(
+export const fetchProperties = createAsyncThunk<PropertyList[], object | undefined, { rejectValue: ApiError }>(
     'properties/fetchProperties', async (filters, { rejectWithValue }) => {
         try {
             // Construct query string if filters are provided
             const queryString = filters ? '?' + new URLSearchParams(filters as Record<string, string>).toString() : '';
             console.log(`Fetching properties with filters: ${queryString}`);
-            const response = await apiClient.get<Property[]>(`/properties/${queryString}`);
+            const response = await apiClient.get<PropertyList[]>(`/properties/${queryString}`);
             console.log(response)
 
             if (response.status === 200) {

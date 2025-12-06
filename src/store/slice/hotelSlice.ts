@@ -55,7 +55,7 @@ export const getAllHotel = createAsyncThunk<
     async (_, { rejectWithValue }) => {
         try {
             console.log("Fetching hotels from:", API_SERVER_BASE_URL);
-            const hotel = await apiClient.get<Hotel[]>(`/hotel/all`);
+            const hotel = await apiClient.get<Hotel[]>(`/hotel/all/`);
             console.log("Fetched hotels:", hotel);
             return hotel.status === 200 ? hotel.data : handleApiError(hotel, "Failed to fetch hotels.", rejectWithValue);
         } catch (err) {

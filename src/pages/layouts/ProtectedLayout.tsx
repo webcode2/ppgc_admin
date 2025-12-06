@@ -29,7 +29,6 @@ const navItems = [
             { label: 'Account Settings', to: 'profile', icon: <UserCog size={26} /> },
             // { label: 'Account Settings', to: 'account-settings', icon: <UserCog size={26} /> },
             { label: 'Notifications', to: 'notifications', icon: <Bell size={26} /> },
-            { label: 'Security', to: 'security', icon: <ShieldCheck size={26} /> },
         ],
     },
 ];

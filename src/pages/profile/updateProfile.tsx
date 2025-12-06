@@ -1,14 +1,15 @@
-import { useState } from "react";
-import { ImagePlusIcon, Upload } from "lucide-react";
+import { useState, ChangeEvent } from "react";
+import { ImagePlusIcon } from "lucide-react";
 import DashboardCard from "../../components/dashboardCard";
 
 export default function ProfileForm() {
-    const [profilePic, setProfilePic] = useState(null);
+    const [profilePic, setProfilePic] = useState<string | null>(null);
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
+    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         if (file) {
-            setProfilePic(URL.createObjectURL(file));
+            const url = URL.createObjectURL(file);
+            setProfilePic(url);
         }
     };
 
@@ -32,6 +33,7 @@ export default function ProfileForm() {
                             <span className="text-xs text-gray-500">Upload your photo</span>
                         </>
                     )}
+
                     <input
                         id="profile-upload"
                         type="file"
@@ -40,8 +42,8 @@ export default function ProfileForm() {
                         onChange={handleImageUpload}
                     />
                 </label>
-                <p className="my-2 font-medium">Your profile picture</p>
 
+                <p className="my-2 font-medium">Your profile picture</p>
             </div>
 
             <hr className="my-6" />
@@ -57,6 +59,7 @@ export default function ProfileForm() {
                             className="w-full p-3 rounded-lg border border-gray-200 bg-gray-100 text-sm"
                         />
                     </div>
+
                     <div>
                         <label className="block text-sm text-gray-400 mb-1">Email</label>
                         <input
@@ -65,6 +68,7 @@ export default function ProfileForm() {
                             className="w-full p-3 rounded-lg border border-gray-200 bg-gray-100 text-sm"
                         />
                     </div>
+
                     <div>
                         <label className="block text-sm text-gray-400 mb-1">Username</label>
                         <input
@@ -73,6 +77,7 @@ export default function ProfileForm() {
                             className="w-full p-3 rounded-lg border border-gray-200 bg-gray-100 text-sm"
                         />
                     </div>
+
                     <div>
                         <label className="block text-sm text-gray-400 mb-1">Phone number</label>
                         <input
@@ -86,7 +91,7 @@ export default function ProfileForm() {
                 <div>
                     <label className="block text-sm text-gray-400 mb-1">Bio</label>
                     <textarea
-                        rows="4"
+                        rows={4}
                         placeholder="Write your Bio here e.g your hobbies, interests ETC"
                         className="w-full p-3 rounded-lg border border-gray-200 bg-gray-100 text-sm"
                     ></textarea>
@@ -94,13 +99,13 @@ export default function ProfileForm() {
 
                 {/* Buttons */}
                 <div className="flex gap-4 justify-end items-center">
-
                     <button
                         type="button"
                         className="px-6 py-3 border border-gray-300 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100"
                     >
                         Cancel
                     </button>
+
                     <button
                         type="submit"
                         className="px-6 py-3 bg-gradient-to-r from-[#F9F10C] to-[#938E07] text-black font-semibold rounded-lg shadow-sm hover:opacity-90"

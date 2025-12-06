@@ -1,11 +1,14 @@
-export default function InvestmentsTable({ data = [] }) {
+import React from "react";
+import { ReadInvestmentItem } from "../../utils/types/investment";
 
 
+interface InvestmentsTableProps {
+    data?: ReadInvestmentItem[];
+}
+
+export default function InvestmentsTable({ data = [] }: InvestmentsTableProps) {
     return (
-        <div className="bg-white   overflow-hidden mt-8">
-
-
-            {/* Table */}
+        <div className="bg-white overflow-hidden mt-8">
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
                     <thead>
@@ -21,7 +24,10 @@ export default function InvestmentsTable({ data = [] }) {
                     </thead>
                     <tbody>
                         {data.map((item, i) => (
-                            <tr key={i} className="border-b border-gray-200 hover:bg-gray-100">
+                            <tr
+                                key={i}
+                                className="border-b border-gray-200 hover:bg-gray-100"
+                            >
                                 <td className="py-4 px-4">{item.name}</td>
                                 <td className="py-4 px-4">{item.category}</td>
                                 <td className="py-4 px-4">{item.package}</td>

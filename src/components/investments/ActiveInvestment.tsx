@@ -1,7 +1,13 @@
+import { ReadInvestmentItem } from "../../utils/types/investment";
 import { OutlineButton } from "../buttons";
 
-export default function PendingLiquidateInvestments({ data = [] }) {
+interface PendingLiquidateProps {
+    data?: ReadInvestmentItem[];
+}
 
+export default function PendingLiquidateInvestments({
+    data = [],
+}: PendingLiquidateProps) {
 
     return (
         <div className="bg-white   overflow-hidden mt-8">
@@ -31,7 +37,7 @@ export default function PendingLiquidateInvestments({ data = [] }) {
                                     })}
                                 </td>
                                 <td className="py-4 px-4">
-                                    <OutlineButton>Approved</OutlineButton>
+                                    <OutlineButton className={" px-5 bg-gradient-to-t from-[#938E07] to-[#f6ee0c] text-black border-0 "}>Approve</OutlineButton>
                                 </td>
                             </tr>
                         ))}

@@ -28,7 +28,8 @@
     "sha1": "^1.1.1",
     "socket.io-client": "^4.8.1",
     "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.7"
+    "tailwindcss": "^4.1.7",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

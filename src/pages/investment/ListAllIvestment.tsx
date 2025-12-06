@@ -2,16 +2,19 @@ import { ChartNoAxesCombined, ChartNoAxesCombinedIcon, HouseIcon, Image, PiggyBa
 import DashboardCard from "../../components/dashboardCard"
 import { motion, AnimatePresence } from 'framer-motion';
 import InvestmentsTable from "../../components/investments/investmentTable";
-import { invested } from "../../store/dummy";
 import PendingLiquidateInvestments from "../../components/investments/ActiveInvestment";
+import { useNavigate } from "react-router-dom";
+import FloatingAddButton from "../../components/AddFloatingButton";
+import { invested } from "../../store/dummy";
 
 
 
 function InvestmentScreen() {
+    const navigate =useNavigate()
 
 
     return (
-        <div className="space-y-6 ">
+        <div className="space-y-6  px-5">
             <div className="relative overflow-hidden rounded-2xl">
                 <DashboardCard sub_title="In the last 30 days" title="Investment Overview" className="pb-0 overflow-hidden " showDropDown={false} >
                     <motion.div
@@ -22,7 +25,7 @@ function InvestmentScreen() {
                     > <div
                         className="absolute -top-10 -right-40 w-[500px] h-[500px] z-0 opacity-30 rotate-6 x"
                         style={{
-                            background: "linear-gradient(135deg, #F9F10C 0%, #938E07 100%)",
+                            background: "linear-gradient(13deg, #F9F10C 0%, #938E07 100%)",
                             clipPath:
                                 "polygon(67% 0%, 100% 37%, 79% 100%, 24% 100%, 0% 40%, 36% 0%)",
                         }}
@@ -73,11 +76,11 @@ function InvestmentScreen() {
                                     <h3 className="text-xs font-medium mb-2 text-gray-600 whitespace-break-spacess">{card.data.labelUp}</h3>
                                     <p className="text-2xl font-bold">{card.data.valueUp}</p>
                                 </div>
-                                <div className="flex gap-x-3 mt-2 justify-between items-center">
+                                {/* <div className="flex gap-x-3 mt-2 justify-between items-center">
 
                                     <h3 className="text-xs font-medium mb-2 text-gray-600 whitespace-break-spacess">{card.data.labelDOwn}</h3>
                                     <p className="text-2xl font-bold">{card.data.valueDown}</p>
-                                </div>
+                                </div> */}
                             </motion.div>
                         ))}
                     </div>
@@ -87,15 +90,16 @@ function InvestmentScreen() {
                 </DashboardCard>
             </div>
 
-            <DashboardCard title="Investment" showDropDown={false} extraView={invested.length > 2} viewAllAction={() => { alert("fetch more invested data") }}>
+            <DashboardCard  dropDownData={[]} title="Investment" showDropDown={false} extraView={invested.length > 2} viewAllAction={() => { alert("fetch more invested data") }}>
                 <InvestmentsTable data={invested} />
             </DashboardCard>
 
             <DashboardCard title="Pending Liquidatiion" showDropDown={false} extraView={invested.length > 2} viewAllAction={() => { alert("fetch more pending liquidation ") }}>
                 <PendingLiquidateInvestments data={invested} />
             </DashboardCard>
-
-
+  <FloatingAddButton className="   bg-transparent border-[#7f7a06] border rounded-full text-[#7f7a06] active:scale-95 transition-all" onClick={() => {
+                navigate("/investments/new")
+            }} />
         </div >
     )
 }

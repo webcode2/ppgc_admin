@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import DashboardCard from "../../components/dashboardCard"
-import { inspectionData, propertyList } from "../../store/dummy"
 import InspectionBookingTable from "../../components/properties/inspectionBookingTable"
 import { useNavigate } from "react-router-dom"
 import FloatingAddButton from "../../components/AddFloatingButton"
@@ -8,6 +7,7 @@ import PropertyListTable from "../../components/properties/propertyListTable"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../../store"
 import { fetchProperties } from "../../store/slice/propertySlice"
+import { inspectionData } from '../../store/dummy'
 
 function PropertyScreen() {
     const navigate = useNavigate()
@@ -24,7 +24,7 @@ function PropertyScreen() {
 // once properties is fetch 
 
     return (
-        <div className="space-y-6 ">
+        <div className="space-y-6 p-5">
             <DashboardCard title="Properties Listed" showDropDown={false} extraView={properties.length > 3 ? true : false} className="px-5">
                 <PropertyListTable data={properties} />
             </DashboardCard>
