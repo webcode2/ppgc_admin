@@ -39,7 +39,7 @@ function Hotel() {
 
     // Removed openMenu and handleToggle, as this logic is now in HotelRow.tsx
 
-    if (isLoading) return <Loading />
+    if (isLoading) return <Loading  text='Loading Registered Hotels'/>
 
     if (!hotels || hotels.length === 0) {
         return (

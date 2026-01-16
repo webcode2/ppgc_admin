@@ -1,16 +1,25 @@
-export interface BuyInvestmentPayload {
-    name: string,
-    amount: number,
-    interest_rate: number,
-    duration: number,
-    trx: {
-        amount: number,
-        name: string,
-        trx_id: string,
-        trx_type: "deposit" | "withdrawer"
-    }
-
+export interface Transaction {
+    amount: number;
+    name: string;
+    trx_id: string;
+    id: number;
+    trx_type: "deposit" | "withdrawal" | string;   // extendable
+    created_at: string; // ISO timestamp
 }
+
+export interface AppInvestmentItem {
+    name: string;
+    amount: number;
+    interest_rate: number;
+    duration: number;
+    trx: Transaction;
+    id: number;
+    created_at: string; // ISO timestamp
+    roi: number;
+    maturity_time: string; // ISO timestamp
+    status: "active" | "inactive" | "pending" | string; // extendable
+}
+
 
 
 

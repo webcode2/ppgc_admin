@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 // Assuming fetchBookings is imported from bookingSlice
 import { fetchBookings } from "../../store/slice/bookingSlice";
+import Loading from '../../components/loading';
 
 
 function Booking() {
@@ -31,7 +32,7 @@ function Booking() {
 
 
     if (isLoading) {
-        return <div className="p-8 text-center text-gray-500">Loading booking data...</div>;
+        return <Loading text='Loadig Bookings'/>
     }
 
 

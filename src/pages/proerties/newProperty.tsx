@@ -9,6 +9,7 @@ import { ArrowLeft, ArrowRight, Save } from "lucide-react";
 import { Area, Errors, PropertyImage, PropertyPayload } from "../../utils/types/propertiesType";
 import { AppDispatch, RootState } from "../../store";
 import { uploadSignedImageTest } from "../../../signing";
+import { useNavigate } from "react-router-dom";
 
 const PropertyWizard = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -16,7 +17,7 @@ const PropertyWizard = () => {
     const [errors, setErrors] = useState<Errors>({});
     const property_type = useSelector((state: RootState) => state.property.propertyTypes)
     const [type, setType] = useState<string[]>(property_type);
-
+    const navigate = useNavigate()
 
     const [property, setProperty] = useState<PropertyPayload>({
         title: "",
@@ -208,7 +209,10 @@ const PropertyWizard = () => {
                     </div>
 
                     {/* NEXT BUTTON */}
-                    <div className="flex justify-end items-center w-full pb-5 col-span-2">
+                    <div className="flex items-center w-full pb-5 col-span-2 justify-between">
+                        <SolidButton onClick={() => navigate(-1)} className="bg-gray-400  text-black flex items-center gap-2 active:scale-95">
+                            <ArrowLeft size={18} />Cancel
+                        </SolidButton>
                         <SolidButton onClick={handleNext} className="flex items-center gap-2 active:scale-95">
                             Next <ArrowRight size={18} />
                         </SolidButton>

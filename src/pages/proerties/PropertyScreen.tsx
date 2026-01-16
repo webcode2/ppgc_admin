@@ -7,13 +7,12 @@ import PropertyListTable from "../../components/properties/propertyListTable"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../../store"
 import { fetchInspections, fetchProperties } from "../../store/slice/propertySlice"
-import { inspectionData } from '../../store/dummy'
 
 function PropertyScreen() {
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
 
-    const properties = useSelector((state: RootState) => state.property.properties)
+    const {properties,inspectionData} = useSelector((state: RootState) => state.property)
 
 
     useEffect(() => {
